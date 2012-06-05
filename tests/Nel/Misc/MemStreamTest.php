@@ -22,6 +22,9 @@
 
 namespace Nel\Misc;
 
+/**
+ * MemStreamTest
+ */
 class MemStreamTest extends \PHPUnit_Framework_TestCase {
 
 	public function testBuffer() {
@@ -44,8 +47,18 @@ class MemStreamTest extends \PHPUnit_Framework_TestCase {
 		$mem->setBuffer($buf);
 		$this->assertEquals($buf, $mem->getBuffer());
 		$this->assertEquals(0, $mem->getPos());
-		$this->assertNull($mem->seek(10));
+
+		$this->assertTrue($mem->seek(10));
 		$this->assertEquals(10, $mem->getPos());
+
+		$pos = $mem->getPos();
+		$this->assertFalse($mem->seek(-1));
+		$this->assertEquals($pos, $mem->getPos());
+
+		$pos = $mem->getPos();
+		$size = $mem->getSize();
+		$this->assertFalse($mem->seek($size + 1));
+		$this->assertEquals($pos, $mem->getPos());
 	}
 
 	public function test_format_size() {
@@ -64,7 +77,21 @@ class MemStreamTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals(4, $mem->_format_size('V'));
 		$this->assertEquals(8, $mem->_format_size('d'));
 		$this->assertEquals(1, $mem->_format_size('x'));
+		$this->setExpectedException('\RuntimeException', 'Unknown format {?}');
+		$mem->_format_size('?');
 		//throw new \Exception('Unknown format {'.$format.'}');
+	}
+
+	public function testBufferOverflow() {
+		$buf = "\x01\x02\x03\x04";
+
+		$mem = new MemStream();
+		$mem->setBuffer($buf);
+		$this->assertEquals($buf, $mem->getBuffer());
+		$this->assertEquals(0, $mem->getPos());
+
+		$this->setExpectedException('\RuntimeException', 'Buffer overflow by 6 bytes');
+		$mem->serial_byte($result, 10);
 	}
 
 	public function testSerial_byte() {
@@ -75,9 +102,10 @@ class MemStreamTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals($buf, $mem->getBuffer());
 		$this->assertEquals(0, $mem->getPos());
 
-		$mem->serial_byte($result);
-		$this->assertEquals(1, $result);
-		$this->assertEquals(1, $mem->getPos());
+		$mem->serial_byte($val, 3);
+		$this->assertCount(3, $val);
+		$this->assertEquals(array(1, 2, 3), $val);
+		$this->assertEquals(3, $mem->getPos());
 	}
 
 	public function testSerial_short() {
@@ -87,12 +115,9 @@ class MemStreamTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals($buf, $mem->getBuffer());
 		$this->assertEquals(0, $mem->getPos());
 
-		$mem->serial_short($short_n);
-		$this->assertEquals(0x0102, $short_n);
-		$this->assertEquals(2, $mem->getPos());
-
-		$mem->serial_short($short_n);
-		$this->assertEquals(0x0304, $short_n);
+		$mem->serial_short($val, 2);
+		$this->assertCount(2, $val);
+		$this->assertEquals(array(0x0102, 0x0304), $val);
 		$this->assertEquals(4, $mem->getPos());
 	}
 
@@ -103,12 +128,9 @@ class MemStreamTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals($buf, $mem->getBuffer());
 		$this->assertEquals(0, $mem->getPos());
 
-		$mem->serial_short_n($short_n);
-		$this->assertEquals(0x0102, $short_n);
-		$this->assertEquals(2, $mem->getPos());
-
-		$mem->serial_short_n($short_n);
-		$this->assertEquals(0x0304, $short_n);
+		$mem->serial_short_n($val, 2);
+		$this->assertCount(2, $val);
+		$this->assertEquals(array(0x0102, 0x0304), $val);
 		$this->assertEquals(4, $mem->getPos());
 	}
 
@@ -119,12 +141,9 @@ class MemStreamTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals($buf, $mem->getBuffer());
 		$this->assertEquals(0, $mem->getPos());
 
-		$mem->serial_uint32($val);
-		$this->assertEquals(0x04030201, $val);
-		$this->assertEquals(4, $mem->getPos());
-
-		$mem->serial_uint32($val);
-		$this->assertEquals(0x08070605, $val);
+		$mem->serial_uint32($val, 2);
+		$this->assertCount(2, $val);
+		$this->assertEquals(array(0x04030201, 0x08070605), $val);
 		$this->assertEquals(8, $mem->getPos());
 	}
 
@@ -135,12 +154,9 @@ class MemStreamTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals($buf, $mem->getBuffer());
 		$this->assertEquals(0, $mem->getPos());
 
-		$mem->serial_uint32_n($val);
-		$this->assertEquals(0x01020304, $val);
-		$this->assertEquals(4, $mem->getPos());
-
-		$mem->serial_uint32_n($val);
-		$this->assertEquals(0x05060708, $val);
+		$mem->serial_uint32_n($val, 2);
+		$this->assertCount(2, $val);
+		$this->assertEquals(array(0x01020304, 0x05060708), $val);
 		$this->assertEquals(8, $mem->getPos());
 	}
 
@@ -151,8 +167,9 @@ class MemStreamTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals($buf, $mem->getBuffer());
 		$this->assertEquals(0, $mem->getPos());
 
-		$mem->serial_sint32($val);
-		$this->assertEquals(-1, $val);
+		$mem->serial_sint32($val, 1);
+		$this->assertCount(1, $val);
+		$this->assertEquals(array(-1), $val);
 		$this->assertEquals(4, $mem->getPos());
 	}
 
@@ -163,8 +180,9 @@ class MemStreamTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals($buf, $mem->getBuffer());
 		$this->assertEquals(0, $mem->getPos());
 
-		$mem->serial_float($val);
-		$this->assertEquals(3.14, $val, '', 0.001);
+		$mem->serial_float($val, 1);
+		$this->assertCount(1, $val);
+		$this->assertEquals(3.14, $val[0], '', 0.001);
 		$this->assertEquals(4, $mem->getPos());
 	}
 
@@ -175,10 +193,11 @@ class MemStreamTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals($buf, $mem->getBuffer());
 		$this->assertEquals(0, $mem->getPos());
 
-		$mem->serial_uint64($val);
+		$mem->serial_uint64($val, 1);
 
 		// test for string value
-		$this->assertEquals("72623859790382856", $val);
+		$this->assertCount(1, $val);
+		$this->assertEquals("72623859790382856", $val[0]);
 		$this->assertEquals(8, $mem->getPos());
 	}
 
@@ -190,10 +209,11 @@ class MemStreamTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals($buf, $mem->getBuffer());
 		$this->assertEquals(0, $mem->getPos());
 
-		$mem->serial_uint64($val);
+		$mem->serial_uint64($val, 1);
 
 		// test for string value
-		$this->assertEquals("72623859790382856", $val);
+		$this->assertCount(1, $val);
+		$this->assertEquals("72623859790382856", $val[0]);
 		$this->assertEquals(8, $mem->getPos());
 	}
 
@@ -211,50 +231,85 @@ class MemStreamTest extends \PHPUnit_Framework_TestCase {
 
 	public function testSerial_string() {
 		$buf = "\x0A\x00\x00\x00int string";
+		$buf .= "\x0B\x00\x00\x00int string2";
 		$mem = new MemStream();
 		$mem->setBuffer($buf);
 		$this->assertEquals($buf, $mem->getBuffer());
 		$this->assertEquals(0, $mem->getPos());
 
-		$mem->serial_string($val);
-		$this->assertEquals('int string', $val);
-		$this->assertEquals(14, $mem->getPos());
+		$mem->serial_string($val, 2);
+		$this->assertCount(2, $val);
+		$this->assertEquals(array('int string', 'int string2'), $val);
+		$this->assertEquals(29, $mem->getPos());
 	}
 
 	public function testSerial_byte_string() {
-		$buf = "\x04Test123";
+		$buf = "\x04Test";
+		$buf .= "\x07Test123";
 		$mem = new MemStream();
 		$mem->setBuffer($buf);
 		$this->assertEquals($buf, $mem->getBuffer());
 		$this->assertEquals(0, $mem->getPos());
 
-		$mem->serial_byte_string($val);
-		$this->assertEquals('Test', $val);
-		$this->assertEquals(5, $mem->getPos());
+		$mem->serial_byte_string($val, 2);
+		$this->assertCount(2, $val);
+		$this->assertEquals(array('Test', 'Test123'), $val);
+		$this->assertEquals(13, $mem->getPos());
 	}
 
 	public function testSerial_short_string() {
-		$buf = "\x04\x00Test123";
+		$buf = "\x04\x00Test";
+		$buf .= "\x07\x00Test123";
 		$mem = new MemStream();
 		$mem->setBuffer($buf);
 		$this->assertEquals($buf, $mem->getBuffer());
 		$this->assertEquals(0, $mem->getPos());
 
-		$mem->serial_short_string($val);
-		$this->assertEquals('Test', $val);
-		$this->assertEquals(6, $mem->getPos());
+		$mem->serial_short_string($val, 2);
+		$this->assertCount(2, $val);
+		$this->assertEquals(array('Test', 'Test123'), $val);
+		$this->assertEquals(15, $mem->getPos());
 	}
 
 	public function testSerial_int_string() {
-		$buf = "\x04\x00\x00\x00Test123";
+		$buf = "\x04\x00\x00\x00Test";
+		$buf .= "\x07\x00\x00\x00Test123";
 		$mem = new MemStream();
 		$mem->setBuffer($buf);
 		$this->assertEquals($buf, $mem->getBuffer());
 		$this->assertEquals(0, $mem->getPos());
 
-		$mem->serial_int_string($val);
-		$this->assertEquals('Test', $val);
-		$this->assertEquals(8, $mem->getPos());
+		$mem->serial_int_string($val, 2);
+		$this->assertCount(2, $val);
+		$this->assertEquals(array('Test', 'Test123'), $val);
+		$this->assertEquals(19, $mem->getPos());
 	}
 
+	public function testDump() {
+		$buffer = "\x31\x01\x32\x1F\x33\x80\x90\xA0\xB0\xC0\x41\x42\x43\x44\x45\x46";
+		$buffer .= "\x31\x32";
+
+		$result = "31 01 32 1f 33 80 90 a0                             [1.2.3...        ]\n";
+		$mem = new MemStream($buffer);
+		$hexDump = $mem->dump(8);
+		$this->assertEquals($result, $hexDump);
+
+		$result = "32 1f 33 80 90 a0 b0 c0                             [2.3.....        ]\n";
+		$hexDump = $mem->dump(8, 2);
+		$this->assertEquals($result, $hexDump);
+	}
+
+	public function testHexDump() {
+		$buffer = "\x31\x01\x32\x1F\x33\x80\x90\xA0\xB0\xC0\x41\x42\x43\x44\x45\x46";
+		$buffer .= "\x31\x32";
+		$result = "31 01 32 1f 33 80 90 a0 b0 c0 41 42 43 44 45 46     [1.2.3.....ABCDEF]\n";
+		$result .= "31 32                                               [12              ]\n";
+
+		$hexDump = MemStream::hexDump($buffer);
+		$this->assertEquals($result, $hexDump);
+
+		$result = "31 01 32 1f 33 80 90 a0 b0 c0 41 42 43 44 45 46 31 32";
+		$hexDump = MemStream::hexDump($buffer, false);
+		$this->assertEquals($result, $hexDump);
+	}
 }

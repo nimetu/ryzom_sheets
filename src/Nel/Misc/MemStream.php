@@ -22,6 +22,9 @@
 
 namespace Nel\Misc;
 
+/**
+ * MemStream
+ */
 class MemStream {
 	protected $is64bit;
 
@@ -29,61 +32,105 @@ class MemStream {
 	protected $pos;
 	protected $size;
 
+	/**
+	 * @param string $buffer
+	 */
 	function __construct($buffer = '') {
 		$this->setBuffer($buffer);
 
-		$this->set64bit(is_int('9223372036854775807'));
+		$this->set64bit(PHP_INT_SIZE == 8);
 	}
 
+	/**
+	 * If 64bit support is disabled (32bit platform)
+	 * then use bcmath() in serial_uint64() method
+	 *
+	 * @param bool $s
+	 */
 	function set64bit($s) {
 		$this->is64bit = (bool)$s;
 	}
 
+	/**
+	 * Set buffer and reset position counter to start
+	 *
+	 * @param $buf
+	 */
 	function setBuffer($buf) {
 		$this->pos = 0;
 		$this->size = strlen($buf);
 		$this->buffer = $buf;
 	}
 
+	/**
+	 * Return full buffer
+	 *
+	 * @return mixed
+	 */
 	function getBuffer() {
 		return $this->buffer;
 	}
 
+	/**
+	 * Return current buffer size
+	 *
+	 * @return mixed
+	 */
 	function getSize() {
 		return $this->size;
 	}
 
+	/**
+	 * Return current read position in buffer
+	 *
+	 * @return mixed
+	 */
 	function getPos() {
 		return $this->pos;
 	}
 
+	/**
+	 * Set current buffer position
+	 *
+	 * @param int $pos
+	 *
+	 * @return bool
+	 */
 	function seek($pos) {
 		if ($pos < 0 || $pos > $this->getSize()) {
 			return false;
 		}
 		$this->pos = $pos;
+		return true;
 	}
 
-	function debug($fmt) {
-		//$args = array_slice(func_get_args(), 1);
-		//vprintf($fmt, $args);
-	}
-
+	/**
+	 * Return hex dump for next N bytes from buffer
+	 * Offset can be negative to rewind buffer for dump
+	 *
+	 * @param int $bytes
+	 * @param int $offset
+	 *
+	 * @return string
+	 */
 	function dump($bytes = 32, $offset = 0) {
 		$buf = substr($this->buffer, $this->pos + $offset, $bytes);
-		return "\n".$this->hex_dump($buf);
+		return self::hexDump($buf);
 	}
 
-	function hex_dump($buf, $long = true) {
+	/**
+	 * Return hex-ascii formatted hexdump
+	 *
+	 * @param string $buf
+	 * @param bool $long
+	 *
+	 * @return string
+	 */
+	static function hexDump($buf, $long = true) {
 		$ret = '';
-		$hex = '';
-		$ascii = '';
 
 		if ($long !== true) {
 			// one big space separated hex string
-			if ($long !== false) {
-				$buf = substr($buf, 0, $long);
-			}
 			$ret = array();
 			for ($i = 0; $i < $l = strlen($buf); $i++) {
 				$b = ord($buf[$i]);
@@ -92,15 +139,19 @@ class MemStream {
 			$ret = join(' ', $ret);
 		} else {
 			// 16 byte wide hex-ascii side-by-side
-
-			if (strlen($buf) > 16) {
-				$ret .= $this->hex_dump(substr($buf, 0, 16), $long);
-				$ret .= $this->hex_dump(substr($buf, 16), $long);
-			} else {
-				for ($i = 0, $l = strlen($buf); $i < $l; $i++) {
-					$b = ord($buf{$i});
+			$length = strlen($buf);
+			$blocks = ceil($length / 16);
+			for ($i = 0; $i < $blocks; $i++) {
+				$hex = '';
+				$ascii = '';
+				for ($j = 0; $j < 16; $j++) {
+					$idx = 16 * $i + $j;
+					if ($idx >= $length) {
+						// end of string
+						break;
+					}
+					$b = ord($buf[$idx]);
 					$hex .= sprintf('%02x ', $b);
-
 					if ($b < 32 || $b > 127) {
 						$ascii .= '.';
 					} else {
@@ -111,16 +162,20 @@ class MemStream {
 					$ret .= sprintf("%-51s [%-16s]\n", $hex, $ascii);
 				}
 			}
-
 		}
 		return $ret;
 	}
 
 	/**
 	 * Return unpack/pack format size in bytes
+	 *
+	 * @param string $format
+	 *
+	 * @return int
+	 * @throws \RuntimeException
 	 */
 	function _format_size($format) {
-		switch ($format{0}) {
+		switch ($format[0]) {
 		case 'a':
 		case 'A':
 		case 'h':
@@ -153,7 +208,7 @@ class MemStream {
 			$size = 1;
 			break; // 0x00 ? NUL
 		default: // i, I, X, @
-			throw new \Exception('Unknown format {'.$format.'}');
+			throw new \RuntimeException('Unknown format {'.$format.'}');
 		}
 		return $size;
 	}
@@ -161,21 +216,22 @@ class MemStream {
 	/**
 	 * _read
 	 *
-	 * @param $val - referenced, where to put value
-	 * @param $format - unpack format
+	 * @param mixed $val - referenced, where to put value
+	 * @param string $format - unpack format
 	 * @param int $nb
 	 *
 	 * @throws \RuntimeException
-	 * @internal param $len - array length, 1 means single, no array
 	 */
 	private function _read(&$val, $format, $nb = null) {
 		$len = $nb === null ? 1 : $nb;
-		if (!in_array($format{0}, array('a', 'A', 'h', 'H'))) {
+		if (!in_array($format[0], array('a', 'A', 'h', 'H'))) {
 			$format = $format.$len;
 		}
 		$size = $this->_format_size($format);
-		if ($this->pos > $this->size) {
-			throw new \RuntimeException('Buffer overflow');
+		$newPos = $this->pos + $size * $len;
+		if ($newPos > $this->size) {
+			$bytes = $newPos - $this->size;
+			throw new \RuntimeException("Buffer overflow by $bytes bytes");
 		}
 		$tmp = unpack('@'.$this->pos.'/'.$format, $this->buffer);
 		if ($nb === null) {
@@ -189,29 +245,41 @@ class MemStream {
 	/**
 	 * _serial
 	 *
-	 * @param $val - input or output for value
-	 * @param $format - format
-	 * @param null $nb
+	 * @param mixed $val - input or output for value
+	 * @param string $format - format
+	 * @param int $nb
 	 */
 	private function _serial(&$val, $format, $nb = null) {
 		$this->_read($val, $format, $nb);
 	}
 
+	/**
+	 * Read 8bit integer
+	 */
 	function serial_byte(&$val, $nb = null) {
 		$this->_serial($val, 'C', $nb);
 	}
 
-	// big-endian - network order
+	/**
+	 * Read 16bit integer
+	 * big-endian, network order
+	 */
 	function serial_short_n(&$val, $nb = null) {
 		$this->_serial($val, 'n', $nb);
 	}
 
-	// little-endian - intel's order
+	/**
+	 * Read 16bit integer
+	 * little-endian, intel's order
+	 */
 	function serial_short(&$val, $nb = null) {
 		$this->_serial($val, 'v', $nb);
 	}
 
-	// FIXME: test on 32bit
+	/**
+	 * Read unsigned 64bit integer
+	 * little-endian, intel's order
+	 */
 	function serial_uint64(&$val, $nb = null) {
 		if ($nb === null) {
 			$this->serial_uint32($low);
@@ -226,51 +294,59 @@ class MemStream {
 		} else {
 			$val = array();
 			for ($i = 0; $i < $nb; $i++) {
-				$this->serial_uint32($low);
-				$this->serial_uint32($high);
-
-				if ($this->is64bit) {
-					$val[] = ($high << 32) + $low;
-				} else {
-					$high = bcmul($high, '4294967296');
-					$val = bcadd($high, $low);
-				}
-
+				$this->serial_uint64($val[$i]);
 			}
 		}
 	}
 
-	// big-endian - network order
+	/**
+	 * Read 32bit integer
+	 * big-endian, network order
+	 */
 	function serial_uint32_n(&$val, $nb = null) {
 		$this->_serial($val, 'N', $nb);
 	}
 
-	// little-endian - intel's order
+	/**
+	 * Read 32bit integer
+	 * little-endian, intel's order
+	 */
 	function serial_uint32(&$val, $nb = null) {
 		$this->_serial($val, 'V', $nb);
 	}
 
-	// machine order
+	/**
+	 * Read signed 32bit integer
+	 */
 	function serial_sint32(&$val, $nb = null) {
 		$this->_serial($val, 'l', $nb);
 	}
 
-	// machine dependent size and representation
+	/**
+	 * Read 32bit float
+	 */
 	function serial_float(&$val, $nb = null) {
 		$this->_serial($val, 'f', $nb);
 	}
 
-	// simple - no unpack/pack
+	/**
+	 * Read string buffer
+	 */
 	function serial_buffer(&$val, $size) {
 		$val = substr($this->buffer, $this->pos, $size);
 		$this->pos += $size;
 	}
 
+	/**
+	 * @see serial_int_string
+	 */
 	function serial_string(&$val, $nb = null) {
 		$this->serial_int_string($val, $nb);
 	}
 
-	// <int> <string>
+	/**
+	 * Read string with <32bit> length counter
+	 */
 	function serial_int_string(&$val, $nb = null) {
 		if ($nb === null) {
 			$this->serial_uint32($size);
@@ -278,13 +354,14 @@ class MemStream {
 		} else {
 			$val = array();
 			for ($i = 0; $i < $nb; $i++) {
-				$this->serial_uint32($size);
-				$this->serial_buffer($val[$i], $size);
+				$this->serial_int_string($val[$i]);
 			}
 		}
 	}
 
-	// <short> <string>
+	/**
+	 * Read string with <16bit> length counter
+	 */
 	function serial_short_string(&$val, $nb = null) {
 		if ($nb === null) {
 			$this->serial_short($size);
@@ -292,13 +369,14 @@ class MemStream {
 		} else {
 			$val = array();
 			for ($i = 0; $i < $nb; $i++) {
-				$this->serial_short($size);
-				$this->serial_buffer($val[$i], $size);
+				$this->serial_short_string($val[$i]);
 			}
 		}
 	}
 
-	// <uint8> <string>
+	/**
+	 * Read string with <8bit> length counter
+	 */
 	function serial_byte_string(&$val, $nb = null) {
 		if ($nb === null) {
 			$this->serial_byte($size);
@@ -306,10 +384,8 @@ class MemStream {
 		} else {
 			$val = array();
 			for ($i = 0; $i < $nb; $i++) {
-				$this->serial_byte($size);
-				$this->serial_buffer($val[$i], $size);
+				$this->serial_byte_string($val[$i]);
 			}
 		}
 	}
 }
-
