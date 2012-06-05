@@ -26,6 +26,8 @@ namespace Nel\Misc;
  * MemStream
  */
 class MemStream {
+	protected $isReading;
+
 	protected $is64bit;
 
 	protected $buffer;
@@ -60,6 +62,7 @@ class MemStream {
 		$this->pos = 0;
 		$this->size = strlen($buf);
 		$this->buffer = $buf;
+		$this->isReading = !empty($buf);
 	}
 
 	/**
@@ -87,6 +90,10 @@ class MemStream {
 	 */
 	function getPos() {
 		return $this->pos;
+	}
+
+	function isReading() {
+		return $this->isReading;
 	}
 
 	/**
@@ -243,6 +250,23 @@ class MemStream {
 	}
 
 	/**
+	 * _write
+	 *
+	 * @param mixed $val
+	 * @param string $format
+	 */
+	private function _write($val, $format) {
+		if (!is_array($val)) {
+			$val = array($val);
+		}
+		foreach ($val as $v) {
+			$this->buffer .= pack($format, $v);
+		}
+		$this->size = strlen($this->buffer);
+		$this->pos = $this->size;
+	}
+
+	/**
 	 * _serial
 	 *
 	 * @param mixed $val - input or output for value
@@ -250,18 +274,25 @@ class MemStream {
 	 * @param int $nb
 	 */
 	private function _serial(&$val, $format, $nb = null) {
-		$this->_read($val, $format, $nb);
+		if ($this->isReading) {
+			$this->_read($val, $format, $nb);
+		} else {
+			$this->_write($val, $format);
+		}
 	}
 
 	/**
-	 * Read 8bit integer
+	 * Read/write 8bit integer
+	 *
+	 * @param mixed $val
+	 * @param int $nb
 	 */
 	function serial_byte(&$val, $nb = null) {
 		$this->_serial($val, 'C', $nb);
 	}
 
 	/**
-	 * Read 16bit integer
+	 * Read/write 16bit integer
 	 * big-endian, network order
 	 */
 	function serial_short_n(&$val, $nb = null) {
@@ -269,7 +300,7 @@ class MemStream {
 	}
 
 	/**
-	 * Read 16bit integer
+	 * Read/write 16bit integer
 	 * little-endian, intel's order
 	 */
 	function serial_short(&$val, $nb = null) {
@@ -277,30 +308,48 @@ class MemStream {
 	}
 
 	/**
-	 * Read unsigned 64bit integer
+	 * Read/write unsigned 64bit integer
 	 * little-endian, intel's order
 	 */
 	function serial_uint64(&$val, $nb = null) {
-		if ($nb === null) {
-			$this->serial_uint32($low);
-			$this->serial_uint32($high);
+		if ($this->isReading) {
+			if ($nb === null) {
+				$this->serial_uint32($low);
+				$this->serial_uint32($high);
 
-			if ($this->is64bit) {
-				$val = ($high << 32) + $low;
+				if ($this->is64bit) {
+					$val = ($high << 32) + $low;
+				} else {
+					$high = bcmul($high, '4294967296');
+					$val = bcadd($high, $low);
+				}
 			} else {
-				$high = bcmul($high, '4294967296');
-				$val = bcadd($high, $low);
+				$val = array();
+				for ($i = 0; $i < $nb; $i++) {
+					$this->serial_uint64($val[$i]);
+				}
 			}
 		} else {
-			$val = array();
-			for ($i = 0; $i < $nb; $i++) {
-				$this->serial_uint64($val[$i]);
+			if (is_array($val)) {
+				foreach ($val as $s) {
+					$this->serial_uint64($s);
+				}
+			} else {
+				if ($this->is64bit) {
+					$high = ($val >> 32) & 0xFFFFFFFF;
+					$low = $val & 0xFFFFFFFF;
+				} else {
+					$high = bcdiv($val, '4294967296');
+					$low = bcsub($val, $high);
+				}
+				$this->serial_uint32($low);
+				$this->serial_uint32($high);
 			}
 		}
 	}
 
 	/**
-	 * Read 32bit integer
+	 * Read/write 32bit integer
 	 * big-endian, network order
 	 */
 	function serial_uint32_n(&$val, $nb = null) {
@@ -308,32 +357,40 @@ class MemStream {
 	}
 
 	/**
-	 * Read 32bit integer
-	 * little-endian, intel's order
+	 * Read/write 32bit integer
+	 * little-endian - intel's order
 	 */
 	function serial_uint32(&$val, $nb = null) {
 		$this->_serial($val, 'V', $nb);
 	}
 
 	/**
-	 * Read signed 32bit integer
+	 * Read/write 32bit signed int
+	 * machine order
 	 */
 	function serial_sint32(&$val, $nb = null) {
 		$this->_serial($val, 'l', $nb);
 	}
 
 	/**
-	 * Read 32bit float
+	 * Read/write float
+	 * machine dependent size and representation
 	 */
 	function serial_float(&$val, $nb = null) {
 		$this->_serial($val, 'f', $nb);
 	}
 
 	/**
-	 * Read string buffer
+	 * Read/write string buffer
 	 */
-	function serial_buffer(&$val, $size) {
-		$val = substr($this->buffer, $this->pos, $size);
+	function serial_buffer(&$val, $size = null) {
+		if ($this->isReading) {
+			$val = substr($this->buffer, $this->pos, $size);
+		} else {
+			$this->buffer .= $val;
+			$size = strlen($val);
+			$this->size += $size;
+		}
 		$this->pos += $size;
 	}
 
@@ -345,46 +402,82 @@ class MemStream {
 	}
 
 	/**
-	 * Read string with <32bit> length counter
+	 * Read/write string with <int32> length counter
 	 */
 	function serial_int_string(&$val, $nb = null) {
-		if ($nb === null) {
-			$this->serial_uint32($size);
-			$this->serial_buffer($val, $size);
+		if ($this->isReading) {
+			if ($nb === null) {
+				$this->serial_uint32($size);
+				$this->serial_buffer($val, $size);
+			} else {
+				$val = array();
+				for ($i = 0; $i < $nb; $i++) {
+					$this->serial_int_string($val[$i]);
+				}
+			}
 		} else {
-			$val = array();
-			for ($i = 0; $i < $nb; $i++) {
-				$this->serial_int_string($val[$i]);
+			if (is_array($val)) {
+				foreach ($val as $s) {
+					$this->serial_int_string($s);
+				}
+			} else {
+				$size = strlen($val);
+				$this->serial_uint32($size);
+				$this->serial_buffer($val, $size);
 			}
 		}
 	}
 
 	/**
-	 * Read string with <16bit> length counter
+	 * Read/write string with <16bit> length counter
 	 */
 	function serial_short_string(&$val, $nb = null) {
-		if ($nb === null) {
-			$this->serial_short($size);
-			$this->serial_buffer($val, $size);
+		if ($this->isReading) {
+			if ($nb === null) {
+				$this->serial_short($size);
+				$this->serial_buffer($val, $size);
+			} else {
+				$val = array();
+				for ($i = 0; $i < $nb; $i++) {
+					$this->serial_short_string($val[$i]);
+				}
+			}
 		} else {
-			$val = array();
-			for ($i = 0; $i < $nb; $i++) {
-				$this->serial_short_string($val[$i]);
+			if (is_array($val)) {
+				foreach ($val as $s) {
+					$this->serial_short_string($s);
+				}
+			} else {
+				$size = strlen($val);
+				$this->serial_short($size);
+				$this->serial_buffer($val, $size);
 			}
 		}
 	}
 
 	/**
-	 * Read string with <8bit> length counter
+	 * Read/write string with <8bit> length counter
 	 */
 	function serial_byte_string(&$val, $nb = null) {
-		if ($nb === null) {
-			$this->serial_byte($size);
-			$this->serial_buffer($val, $size);
+		if ($this->isReading) {
+			if ($nb === null) {
+				$this->serial_byte($size);
+				$this->serial_buffer($val, $size);
+			} else {
+				$val = array();
+				for ($i = 0; $i < $nb; $i++) {
+					$this->serial_byte_string($val[$i]);
+				}
+			}
 		} else {
-			$val = array();
-			for ($i = 0; $i < $nb; $i++) {
-				$this->serial_byte_string($val[$i]);
+			if (is_array($val)) {
+				foreach ($val as $s) {
+					$this->serial_byte_string($s);
+				}
+			} else {
+				$size = strlen($val);
+				$this->serial_byte($size);
+				$this->serial_buffer($val, $size);
 			}
 		}
 	}
