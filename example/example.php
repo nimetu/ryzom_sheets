@@ -1,17 +1,20 @@
 <?php
 
-require_once __DIR__.'/loader.php';
+use Nel\Misc\BnpFile;
+use Ryzom\Sheets\PackedSheetsLoader;
+use Ryzom\Translation\StringsManager;
+use Ryzom\Translation\Loader\WordsLoader;
+use Ryzom\Translation\Loader\UxtLoader;
 
-use Nel\Misc\BnpFile,
-Ryzom\Translation\StringsManager,
-Ryzom\Translation\Loader\WordsLoader,
-Ryzom\Translation\Loader\UxtLoader;
-
-$leveldesign = new BnpFile('/srv/home2/ryzom/data/gamedev.bnp');
+require __DIR__.'/../src/Autoload.php';
+$loader = new Autoload();
+$loader->register(__DIR__.'/../src');
 
 $sm = new StringsManager();
 $sm->register(new UxtLoader());
 $sm->register(new WordsLoader());
+
+$leveldesign = new BnpFile('/srv/home2/ryzom/data/gamedev.bnp');
 
 // loading en.uxt file
 $buffer = $leveldesign->readFile('en.uxt');
@@ -34,14 +37,15 @@ printf("%s\n  name = %s\n  description = %s\n", $key, $value['name'], $value['de
 
 /*****************************************************************************/
 echo "\n";
-$psLoader = new \Ryzom\Sheets\PackedSheetsLoader('/srv/home2/ryzom/data');
+$psLoader = new PackedSheetsLoader('/srv/home2/ryzom/data');
 printf("+ loading sitem.packed_sheets file...\n");
 $sitem = $psLoader->load('sitem');
 
 $sheetId = 5603886;
 /** @var $item \Ryzom\Sheets\Client\ItemSheet */
 $item = $sitem->get($sheetId);
-printf("+ %d: item type: %d, variant: %d, icons: (%s, %s), maleShape: %s\n",
+printf(
+	"+ %d: item type: %d, variant: %d, icons: (%s, %s), maleShape: %s\n",
 	$sheetId, $item->ItemType, $item->MapVariant, $item->Icon[0], $item->Icon[1], $item->MaleShape
 );
 

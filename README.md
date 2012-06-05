@@ -8,7 +8,6 @@ Mainly used by RyzomExtra to create cached data files for faster use. (https://g
 Requires
 --------
 * PHP 5.3.2 or greater
-* Symfony2 ClassLoader from https://github.com/symfony/ClassLoader
 
 License
 --------
