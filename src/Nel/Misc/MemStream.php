@@ -340,7 +340,7 @@ class MemStream {
 					$low = $val & 0xFFFFFFFF;
 				} else {
 					$high = bcdiv($val, '4294967296');
-					$low = bcsub($val, $high);
+					$low = bcmod($val, '4294967296');
 				}
 				$this->serial_uint32($low);
 				$this->serial_uint32($high);

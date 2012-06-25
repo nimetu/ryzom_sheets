@@ -306,12 +306,14 @@ class MemStreamTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals('', $mem->getBuffer());
 		$this->assertEquals(0, $mem->getPos());
 
-		$result = "\x56\x34\x12\x00\x00\x00\x00\x00";
-		$result .= "\xbc\x9a\x78\x00\x00\x00\x00\x00";
-		$b = array(0x00123456, 0x00789abc);
+		$result = "\x03\x12\x90\x00\x02\x02\x12\x20";
+		$result.= "\x01\x00\x01\x12\x20\x11\x00\x00";
+		$result.= "\x49\x92\x24\x09\x44\x44\x04\x00";
+		$b = array('2310911766417117699', '18829438681089', '1200958908699209');
+
 		$mem->serial_uint64($b);
 		$this->assertEquals($result, $mem->getBuffer());
-		$this->assertEquals(16, $mem->getPos());
+		$this->assertEquals(24, $mem->getPos());
 	}
 
 	public function testSerial_buffer() {
