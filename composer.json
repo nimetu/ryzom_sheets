@@ -1,7 +1,6 @@
 {
     "name": "nimetu/ryzom_sheets",
     "type": "library",
-	"version": "dev-master",
     "description": "Ryzom and Nel specific classes",
     "keywords": ["ryzom", "nel"],
     "homepage": "http://bmsite.net",
