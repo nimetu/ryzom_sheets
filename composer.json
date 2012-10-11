@@ -1,0 +1,24 @@
+{
+    "name": "nimetu/ryzom_sheets",
+    "type": "library",
+	"version": "dev-master",
+    "description": "Ryzom and Nel specific classes",
+    "keywords": ["ryzom", "nel"],
+    "homepage": "http://bmsite.net",
+    "license": "LGPL",
+    "authors": [
+        {
+            "name": "Meelis Mägi",
+            "email": "nimetu@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0"
+    },
+    "autoload": {
+        "psr-0": {
+            "Nel": "lib/",
+            "Ryzom": "lib/"
+        }
+    }
+}

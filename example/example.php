@@ -6,9 +6,7 @@ use Ryzom\Translation\StringsManager;
 use Ryzom\Translation\Loader\WordsLoader;
 use Ryzom\Translation\Loader\UxtLoader;
 
-require __DIR__.'/../src/Autoload.php';
-$loader = new Autoload();
-$loader->register(__DIR__.'/../src');
+require __DIR__.'/../vendor/autoload.php';
 
 $sm = new StringsManager();
 $sm->register(new UxtLoader());
