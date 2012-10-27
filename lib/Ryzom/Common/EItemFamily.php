@@ -20,9 +20,12 @@
 // Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 //
 
-namespace Ryzom;
+namespace Ryzom\Common;
 
-class ItemFamily {
+/**
+ * <code/ryzom/common/src/game_share/item_family.h>
+ */
+class EItemFamily {
 	const UNDEFINED = 0;
 	const SERVICE = 1;
 	const ARMOR = 2;
