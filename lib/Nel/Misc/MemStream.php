@@ -357,11 +357,47 @@ class MemStream {
 	}
 
 	/**
+	 * Convert signed 32bit int to unsigned 32bit int
+	 */
+	function sint32_to_uint32($val){
+		if((float)$val < 0){
+			$val = sprintf('%u', $val);
+		}
+		return $val;
+	}
+
+	/**
+	 * Convert unsigned 32bit int to signed 32bit int
+	 */
+	function uint32_to_sint32($val){
+		if ((float)$val > 2147483647) {
+			$val = bcsub($val, '4294967296');
+		}
+		return $val;
+	}
+
+	/**
 	 * Read/write 32bit integer
 	 * little-endian - intel's order
 	 */
 	function serial_uint32(&$val, $nb = null) {
-		$this->_serial($val, 'V', $nb);
+		if ($this->isReading()) {
+			$this->_serial($val, 'V', $nb);
+			// correct sign
+			if(is_array($val)){
+				array_map(array($this, 'sint32_to_uint32'), $val);
+			}else{
+				$val = $this->sint32_to_uint32($val);
+			}
+		}else{
+			// correct sign
+			if(is_array($val)){
+				array_map(array($this, 'uint32_to_sint32'), $val);
+			}else{
+				$val = $this->uint32_to_sint32($val);
+			}
+			$this->_serial($val, 'V', $nb);
+		}
 	}
 
 	/**
