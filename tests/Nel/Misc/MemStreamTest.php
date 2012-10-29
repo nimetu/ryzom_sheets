@@ -307,8 +307,8 @@ class MemStreamTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals(0, $mem->getPos());
 
 		$result = "\x03\x12\x90\x00\x02\x02\x12\x20";
-		$result.= "\x01\x00\x01\x12\x20\x11\x00\x00";
-		$result.= "\x49\x92\x24\x09\x44\x44\x04\x00";
+		$result .= "\x01\x00\x01\x12\x20\x11\x00\x00";
+		$result .= "\x49\x92\x24\x09\x44\x44\x04\x00";
 		$b = array('2310911766417117699', '18829438681089', '1200958908699209');
 
 		$mem->serial_uint64($b);
@@ -437,5 +437,27 @@ class MemStreamTest extends \PHPUnit_Framework_TestCase {
 		$result = "31 01 32 1f 33 80 90 a0 b0 c0 41 42 43 44 45 46 31 32";
 		$hexDump = MemStream::hexDump($buffer, false);
 		$this->assertEquals($result, $hexDump);
+	}
+
+	public function testFull64BitValueWrite() {
+		$expected = "\x06\x30\x00\x00\x00\x06\x80\xa7";
+		$int = '12069653598422708230';
+
+		$mem = new MemStream();
+		$this->assertEmpty($mem->getBuffer());
+
+		$mem->serial_uint64($int);
+		$this->assertEquals($expected, $mem->getBuffer());
+	}
+
+	public function testFull64BitValueRead() {
+		$buffer = "\x06\x30\x00\x00\x00\x06\x80\xa7";
+		$expected = '12069653598422708230';
+
+		$mem = new MemStream($buffer);
+		$this->assertEquals($buffer, $mem->getBuffer());
+
+		$mem->serial_uint64($int);
+		$this->assertEquals($expected, $int);
 	}
 }

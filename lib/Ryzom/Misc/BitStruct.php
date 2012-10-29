@@ -60,10 +60,12 @@ class BitStruct {
 			$this->values[$key] = 0;
 		}
 
-		// see if we can use bitwise ops
-		if (PHP_INT_SIZE == 4 && $this->totalBits <= 32) {
+		// PHP will overflow to negative numbers if we use bitwise ops
+		// in full bit length and getValue() will give wrong (negative) result
+		// Limit to 31 and 63 bits only
+		if (PHP_INT_SIZE == 4 && $this->totalBits < 32) {
 			$this->useBitOps = true;
-		} elseif (PHP_INT_SIZE == 8 && $this->totalBits <= 64) {
+		} elseif (PHP_INT_SIZE == 8 && $this->totalBits < 64) {
 			$this->useBitOps = true;
 		} else {
 			$this->useBitOps = false;

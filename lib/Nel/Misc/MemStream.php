@@ -317,7 +317,7 @@ class MemStream {
 				$this->serial_uint32($low);
 				$this->serial_uint32($high);
 
-				if ($this->is64bit) {
+				if ($this->is64bit && is_int($val)) {
 					$val = ($high << 32) + $low;
 				} else {
 					$high = bcmul($high, '4294967296');
@@ -335,7 +335,7 @@ class MemStream {
 					$this->serial_uint64($s);
 				}
 			} else {
-				if ($this->is64bit) {
+				if ($this->is64bit && is_int($val)) {
 					$high = ($val >> 32) & 0xFFFFFFFF;
 					$low = $val & 0xFFFFFFFF;
 				} else {
