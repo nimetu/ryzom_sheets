@@ -22,50 +22,22 @@
 
 namespace Ryzom\Sheets;
 
-use Nel\Misc\MemStream;
-
 /**
- * Factory class to load .packed_sheets and lmconts.packed files
- *
+ * Class PackedSheetsCollection
  * @package Ryzom\Sheets
  */
-class PackedSheetsLoader {
+interface PackedSheetsCollection {
 
 	/**
-	 * @param string $path
+	 * @return mixed
 	 */
-	public function __construct($path) {
-		$this->path = $path;
-	}
+	public function getSheets();
 
 	/**
-	 * @param string $type
+	 * @param string $id
 	 *
-	 * @throws \RuntimeException
-	 * @return PackedSheetsCollection
+	 * @return mixed
 	 */
-	public function load($type) {
-		if ($type == 'lmconts') {
-			$fileName = sprintf('%s/lmconts.packed', $this->path);
-		} else {
-			$fileName = sprintf('%s/%s.packed_sheets', $this->path, $type);
-		}
-		if (!file_exists($fileName)) {
-			throw new \RuntimeException("Requested packed sheet file ($fileName) not found");
-		}
-		$data = file_get_contents($fileName);
-
-		$stream = new MemStream($data);
-
-		if ($type == 'lmconts') {
-			$ps = new ContinentLandmarks();
-		} else {
-			$ps = new PackedSheets($type);
-		}
-		$ps->serial($stream);
-
-		return $ps;
-	}
-
+	public function get($id);
 }
 

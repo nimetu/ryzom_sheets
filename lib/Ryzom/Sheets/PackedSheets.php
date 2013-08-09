@@ -22,11 +22,16 @@
 
 namespace Ryzom\Sheets;
 
-use Ryzom\Sheets\EntityType;
 use Nel\Misc\MemStream;
 use Nel\Misc\StreamInterface;
+use Ryzom\Sheets\EntityType;
 
-class PackedSheets {
+/**
+ * Loader of .packed_sheets files
+ *
+ * @package Ryzom\Sheets
+ */
+class PackedSheets implements PackedSheetsCollection, StreamInterface {
 	const HEADER = 'HSKP';
 	const HEADER_VERSION = 5;
 
@@ -55,7 +60,7 @@ class PackedSheets {
 		//'light_cycle' => 0,
 		//'weather_setup' => 1,
 		//'continent' => 12,
-		//'world' => 1,
+		'world' => 1,
 		//'weather_function_params' => 2,
 		//'mission_icon' => 0,
 		'sbrick' => 32,
@@ -80,7 +85,7 @@ class PackedSheets {
 		'faction' => 0,
 	);
 
-	function __construct($type, $skipDependBlock = true) {
+	public function __construct($type, $skipDependBlock = true) {
 		if (!isset($this->typeVersion[$type])) {
 			throw new \RuntimeException("Unsupported packed sheet file type ($type)");
 		}
@@ -94,7 +99,7 @@ class PackedSheets {
 		$this->entityFactory = new EntityType();
 	}
 
-	function readHeader(MemStream $s) {
+	protected function readHeader(MemStream $s) {
 		// check header
 		$s->serial_buffer($hskp, 4);
 		if ($hskp !== self::HEADER) {
@@ -127,7 +132,7 @@ class PackedSheets {
 		}
 	}
 
-	function serial(MemStream $s) {
+	public function serial(MemStream $s) {
 		$this->readHeader($s);
 
 		// records in this file (ignore this one)
@@ -165,7 +170,7 @@ class PackedSheets {
 	/**
 	 * @return array
 	 */
-	function getSheets() {
+	public function getSheets() {
 		return $this->entries;
 	}
 
@@ -174,7 +179,7 @@ class PackedSheets {
 	 *
 	 * @return mixed
 	 */
-	function get($id) {
+	public function get($id) {
 		if (isset($this->entries[$id])) {
 			return $this->entries[$id];
 		}

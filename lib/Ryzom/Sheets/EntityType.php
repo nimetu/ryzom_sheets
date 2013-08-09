@@ -42,7 +42,7 @@ class EntityType {
 	//const TYPE_LIGHT_CYCLE = 11;
 	//const TYPE_WEATHER_SETUP = 12;
 	//const TYPE_CONTINENT = 13;
-	//const TYPE_WORLD = 14;
+	const TYPE_WORLD = 14;
 	//const TYPE_WEATHER_FUNCTION_PARAMS = 15;
 	//const TYPE_UNKNOWN = 16;
 	//const TYPE_BOTCHAT = 17;
@@ -100,7 +100,8 @@ class EntityType {
 			//case self::TYPE_LIGHT_CYCLE,
 			//case self::TYPE_WEATHER_SETUP,
 			//case self::TYPE_CONTINENT,
-			//case self::TYPE_WORLD,
+		case self::TYPE_WORLD:
+			return new Client\WorldSheet();
 			//case self::TYPE_WEATHER_FUNCTION_PARAMS,
 			//case self::TYPE_UNKNOWN,
 			//case self::TYPE_BOTCHAT,

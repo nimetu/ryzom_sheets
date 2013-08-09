@@ -2,9 +2,9 @@
 
 use Nel\Misc\BnpFile;
 use Ryzom\Sheets\PackedSheetsLoader;
-use Ryzom\Translation\StringsManager;
-use Ryzom\Translation\Loader\WordsLoader;
 use Ryzom\Translation\Loader\UxtLoader;
+use Ryzom\Translation\Loader\WordsLoader;
+use Ryzom\Translation\StringsManager;
 
 require __DIR__.'/../vendor/autoload.php';
 
@@ -46,6 +46,20 @@ printf(
 	"+ %d: item type: %d, variant: %d, icons: (%s, %s), maleShape: %s\n",
 	$sheetId, $item->ItemType, $item->MapVariant, $item->Icon[0], $item->Icon[1], $item->MaleShape
 );
+/*****************************************************************************/
+$world = $psLoader->load('world');
+//print_r($world);
+
+/** @var \Ryzom\Sheets\ContinentLandmarks $lmconts */
+$lmconts = $psLoader->load('lmconts');
+/** @var \Ryzom\Sheets\Client\CContinent[] $continents */
+$continents = $lmconts->get('continents');
+foreach ($continents as $key => $cont) {
+	echo "+ [{$cont->Name}]\n";
+	foreach ($cont->ContLandMarks as $lm) {
+		echo "  > {{$lm->TitleText}} {{$lm->Pos->X}, {$lm->Pos->Y}}\n";
+	}
+}
 
 /*****************************************************************************/
 $count = count($leveldesign->getFileNames());
@@ -57,3 +71,4 @@ foreach ($leveldesign as $filename => $filecontent) {
 		break;
 	}
 }
+
