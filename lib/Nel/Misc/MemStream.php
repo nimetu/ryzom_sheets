@@ -282,13 +282,23 @@ class MemStream {
 	}
 
 	/**
-	 * Read/write 8bit integer
+	 * Read/write unsigned 8bit integer
 	 *
 	 * @param mixed $val
 	 * @param int $nb
 	 */
 	function serial_byte(&$val, $nb = null) {
 		$this->_serial($val, 'C', $nb);
+	}
+
+	/**
+	 * Read/write signed 8bit integer
+	 *
+	 * @param mixed $val
+	 * @param int $nb
+	 */
+	function serial_sint8(&$val, $nb = null) {
+		$this->_serial($val, 'c', $nb);
 	}
 
 	/**
