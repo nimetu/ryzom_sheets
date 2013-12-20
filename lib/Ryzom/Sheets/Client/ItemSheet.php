@@ -22,9 +22,9 @@
 
 namespace Ryzom\Sheets\Client;
 
-use Ryzom\Common\EItemFamily;
 use Nel\Misc\MemStream;
 use Nel\Misc\StreamInterface;
+use Ryzom\Common\EItemFamily;
 
 /**
  * @property int Id
@@ -87,7 +87,7 @@ class ItemSheet implements StreamInterface {
 		$s->serial_sint32($this->IconColor, 4);
 		$s->serial_string($this->IconText);
 		$s->serial_string($this->AnimSet);
-		$s->serial_byte($this->Color);
+		$s->serial_sint8($this->Color);
 		$s->serial_byte($this->HasFx);
 		$s->serial_byte($this->DropOrSell);
 		$s->serial_byte($this->IsItemNoRent);
