@@ -448,6 +448,33 @@ class MemStream {
 	}
 
 	/**
+	 * Serial ucstring (16bit unicode)
+	 */
+	function serial_ucstring(&$val, $nb = null) {
+		if ($this->isReading) {
+			if ($nb === null) {
+				$this->serial_uint32($size);
+				$this->serial_buffer($val, $size * 2);
+			} else {
+				$val = array();
+				for ($i = 0; $i < $nb; $i++) {
+					$this->serial_ucstring($val[$i]);
+				}
+			}
+		} else {
+			if (is_array($val)) {
+				foreach ($val as $s) {
+					$this->serial_ucstring($s);
+				}
+			} else {
+				$size = strlen($val);
+				$this->serial_uint32($size);
+				$this->serial_buffer($val, $size * 2);
+			}
+		}
+	}
+
+	/**
 	 * Read/write string with <int32> length counter
 	 */
 	function serial_int_string(&$val, $nb = null) {
@@ -527,4 +554,48 @@ class MemStream {
 			}
 		}
 	}
+
+	/**
+	 * Version serializing
+	 */
+	function serialVersion(&$val) {
+		if ($this->isReading()) {
+			$this->serial_byte($b);
+			if ($b == 0xFF) {
+				$this->serial_uint32($v);
+			} else {
+				$val = $b;
+			}
+		} else {
+			if ($val >= 0xFF) {
+				$b = 0xFF;
+				$this->serial_byte($b);
+				$this->serial_uint32($val);
+			} else {
+				$this->serial_byte($val);
+			}
+		}
+	}
+
+	/**
+	 * Serialize and verify next few bytes.
+	 *
+	 * Throw exception if they do not match.
+	 *
+	 * @param string $val
+	 *
+	 * @throws \UnexpectedValueException
+	 */
+	function serialCheck($val) {
+		if ($this->isReading()) {
+			$this->serial_buffer($buf, strlen($val));
+			if ($val !== $buf) {
+				var_dump($val, $buf);
+				throw new \UnexpectedValueException("Unexpected data from stream, expected (${val})");
+			}
+		} else {
+			$this->serial_buffer($val, strlen($val));
+		}
+	}
+
 }
