@@ -103,4 +103,23 @@ class BitStructTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, $bit->{'Field5'});
     }
 
+    /**
+     * Test 64bit value
+     */
+    public function testGetValue64() {
+        $bit = new BitStruct(array(
+            'number' => 63,
+            'sign' => 1,
+        ));
+        $this->assertEquals(0, $bit->getValue());
+
+        $bit->{'number'} = 1;
+        $this->assertEquals('1', $bit->getValue());
+        $this->assertEquals('01', $bit->getValueHex());
+
+        $bit->{'sign'} = 1;
+        $this->assertEquals('9223372036854775809', $bit->getValue());
+        $this->assertEquals('8000000000000001', $bit->getValueHex());
+    }
 }
+

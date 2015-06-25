@@ -110,6 +110,19 @@ class BitStruct {
 	}
 
 	/**
+	 * Get bitfield composite value in hex
+	 *
+	 * @param bool $recalculate
+	 *
+	 * @return mixed
+	 */
+	public function getValueHex($recalculate = false) {
+		$val = $this->getValue($recalculate);
+
+		return $this->dec2hex($val);
+	}
+
+	/**
 	 * Get bitfield composite value
 	 *
 	 * @param bool $recalculate
@@ -173,7 +186,7 @@ class BitStruct {
 	 * Modify individual field
 	 *
 	 * @param string $key
-	 * @param int    $val
+	 * @param int $val
 	 */
 	public function __set($key, $val) {
 		if (isset($this->structure[$key])) {
@@ -181,6 +194,24 @@ class BitStruct {
 			$this->realValue = false;
 			$this->values[$key] = $val;
 		}
+	}
+
+	/**
+	 * Convert big number into hex
+	 *
+	 * @param string $dec
+	 *
+	 * @return string
+	 */
+	protected function dec2hex($val) {
+		$result = '';
+		do {
+			$mod = bcmod($val, 16);
+			$result = dechex($mod).$result;
+			$val = bcdiv(bcsub($val, $mod), 16);
+		} while ($val !== '0');
+
+		return $result;
 	}
 
 }
