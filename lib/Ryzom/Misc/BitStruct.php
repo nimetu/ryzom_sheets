@@ -73,11 +73,16 @@ class BitStruct {
 	}
 
 	/**
-	 * Set bitfield composite value
+	 * Set bitfield composite value.
+	 * If value string starts with '0x', then decode it as hex
 	 *
 	 * @param string|int $value
 	 */
 	public function setValue($value) {
+		if (substr($value, 0, 2) == '0x') {
+			$value = $this->hex2dec($value);
+		}
+
 		// see if value is small enough to use bitwise ops
 		if (is_int($value)) {
 			$useBitOps = true;
@@ -214,4 +219,33 @@ class BitStruct {
 		return $result;
 	}
 
+	/**
+	 * Convert big hex number into dec
+	 *
+	 * Strip optional '0x' prefix
+	 *
+	 * @param string $val
+	 *
+	 * @return string
+	 */
+	protected function hex2dec($val) {
+		if (substr($val, 0, 2) == '0x') {
+			$val = substr($val, 2);
+		}
+		$result = '0';
+		$index = 0;
+		do {
+			$hex = substr($val, -2);
+			$val = substr($val, 0, -2);
+
+			$byte = hexdec($hex);
+
+			$byte = bcmul($byte, bcpow(256, $index));
+			$index++;
+
+			$result = bcadd($result, $byte);
+		} while ($val !== '');
+
+		return $result;
+	}
 }

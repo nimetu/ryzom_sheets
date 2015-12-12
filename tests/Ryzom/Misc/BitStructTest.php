@@ -121,5 +121,20 @@ class BitStructTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('9223372036854775809', $bit->getValue());
         $this->assertEquals('8000000000000001', $bit->getValueHex());
     }
+
+	public function testSetValueHex() {
+		$bit = new BitStruct(array(
+			'lo' => 16,
+			'hi' => 16,
+		));
+		$this->assertEquals(0, $bit->getValue());
+
+		$hex = '12345678';
+		$bit->setValue('0x'.$hex);
+		$this->assertEquals('305419896', $bit->getValue());
+		$this->assertEquals($hex, $bit->getValueHex());
+		$this->assertEquals(0x1234, $bit->hi);
+		$this->assertEquals(0x5678, $bit->lo);
+	}
 }
 
