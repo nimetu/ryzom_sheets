@@ -244,7 +244,7 @@ class BitStruct {
 			$index++;
 
 			$result = bcadd($result, $byte);
-		} while ($val !== '');
+		} while (strlen($val) > 0);
 
 		return $result;
 	}
