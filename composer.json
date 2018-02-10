@@ -4,7 +4,7 @@
     "description": "Ryzom and Nel specific classes",
     "keywords": ["ryzom", "nel"],
     "homepage": "http://bmsite.net",
-    "license": "LGPL",
+    "license": "LGPL-3.0-or-later",
     "authors": [
         {
             "name": "Meelis Mägi",
