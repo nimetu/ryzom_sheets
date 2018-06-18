@@ -1,6 +1,7 @@
 <?php
 
 use Nel\Misc\BnpFile;
+use Nel\Misc\SheetId;
 use Ryzom\Sheets\PackedSheetsLoader;
 use Ryzom\Translation\Loader\UxtLoader;
 use Ryzom\Translation\Loader\WordsLoader;
@@ -8,14 +9,26 @@ use Ryzom\Translation\StringsManager;
 
 require __DIR__.'/../vendor/autoload.php';
 
+if (file_exists(__DIR__.'/config.php')) {
+	$config = include __DIR__.'/config.php';
+} else {
+	$config = include __DIR__.'/config.dist.php';
+}
+
 $sm = new StringsManager();
 $sm->register(new UxtLoader());
 $sm->register(new WordsLoader());
 
-$leveldesign = new BnpFile('/srv/home2/ryzom/data/gamedev.bnp');
+// loading sheet_id.bin
+$bnp = new BnpFile($config['data'].'/leveldesign.bnp');
+$data = $bnp->readFile('sheet_id.bin');
+$sheetIds = new SheetId;
+$sheetIds->load($data);
+
+$bnp = new BnpFile($config['data'].'/gamedev.bnp');
 
 // loading en.uxt file
-$buffer = $leveldesign->readFile('en.uxt');
+$buffer = $bnp->readFile('en.uxt');
 $sm->load('uxt', $buffer, 'en');
 $strings = $sm->getStrings('uxt', 'en');
 
@@ -25,7 +38,7 @@ $value = $strings[$key];
 printf("%s = [%s]\n", $key, $value['name']);
 
 // loading outpost_words_en.txt
-$buffer = $leveldesign->readFile('outpost_words_en.txt');
+$buffer = $bnp->readFile('outpost_words_en.txt');
 $sm->load('outpost', $buffer, 'en');
 $strings = $sm->getStrings('outpost', 'en');
 
@@ -35,16 +48,17 @@ printf("%s\n  name = %s\n  description = %s\n", $key, $value['name'], $value['de
 
 /*****************************************************************************/
 echo "\n";
-$psLoader = new PackedSheetsLoader('/srv/home2/ryzom/data');
+$psLoader = new PackedSheetsLoader($config['data']);
 printf("+ loading sitem.packed_sheets file...\n");
 $sitem = $psLoader->load('sitem');
 
 $sheetId = 5603886;
+$sheetName = $sheetIds->getSheetIdName($sheetId);
 /** @var $item \Ryzom\Sheets\Client\ItemSheet */
 $item = $sitem->get($sheetId);
 printf(
-	"+ %d: item type: %d, variant: %d, icons: (%s, %s), maleShape: %s\n",
-	$sheetId, $item->ItemType, $item->MapVariant, $item->Icon[0], $item->Icon[1], $item->MaleShape
+	"+ %d ($sheetName): item type: %d, variant: %d, icons: (%s, %s), maleShape: %s\n",
+	$sheetId, $sheetName, $item->ItemType, $item->MapVariant, $item->Icon[0], $item->Icon[1], $item->MaleShape
 );
 /*****************************************************************************/
 $world = $psLoader->load('world');
@@ -62,10 +76,10 @@ foreach ($continents as $key => $cont) {
 }
 
 /*****************************************************************************/
-$count = count($leveldesign->getFileNames());
+$count = count($bnp->getFileNames());
 echo "Iterating bnp... total files: $count, display first 10\n";
 $c = 0;
-foreach ($leveldesign as $filename => $filecontent) {
+foreach ($bnp as $filename => $filecontent) {
 	printf("[%d] %s: size: %d\n", ++$c, $filename, strlen($filecontent));
 	if ($c > 11) {
 		break;
