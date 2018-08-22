@@ -30,6 +30,14 @@ use Ryzom\Common\EItemFamily;
  * @property int Id
  * @property string MaleShape
  * @property string FemaleShape
+ * @property string ShapeFyros
+ * @property string ShapeFyrosFemale
+ * @property string ShapeMatis
+ * @property string ShapeMatisFemale
+ * @property string ShapeTryker
+ * @property string ShapeTrykerFemale
+ * @property string ShapeZorai
+ * @property string ShapeZoraiFemale
  * @property int SlotBF
  * @property int MapVariant
  * @property int Family
@@ -77,8 +85,19 @@ class ItemSheet implements StreamInterface {
 	 * @param MemStream $s
 	 */
 	public function serial(MemStream $s) {
+		// 42
 		$s->serial_string($this->MaleShape);
 		$s->serial_string($this->FemaleShape);
+		// 43
+		$s->serial_string($this->ShapeFyros);
+		$s->serial_string($this->ShapeFyrosFemale);
+		$s->serial_string($this->ShapeMatis);
+		$s->serial_string($this->ShapeMatisFemale);
+		$s->serial_string($this->ShapeTryker);
+		$s->serial_string($this->ShapeTrykerFemale);
+		$s->serial_string($this->ShapeZorai);
+		$s->serial_string($this->ShapeZoraiFemale);
+		// 42
 		$s->serial_uint64($this->SlotBF);
 		$s->serial_uint32($this->MapVariant);
 		$s->serial_uint32($this->Family);
