@@ -144,6 +144,10 @@ class ItemSheet implements StreamInterface {
 		$s->serial_short($this->RequiredSkillLevel);
 		$s->serial_uint32($this->ItemOrigin);
 
+		// v44 made this common property
+		$this->Scroll = new CScroll();
+		$this->Scroll->serial($s);
+
 		switch ($this->Family) {
 		case EItemFamily::ARMOR:
 			$this->Armor = new CArmor();
@@ -196,8 +200,7 @@ class ItemSheet implements StreamInterface {
 			$this->Consumable->serial($s);
 			break;
 		case EItemFamily::SCROLL:
-			$this->Scroll = new CScroll();
-			$this->Scroll->serial($s);
+			// v44 moved this as 'common' property
 			break;
 		}
 	}
