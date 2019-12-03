@@ -54,9 +54,17 @@ class WordsLoader extends UnicodeConverter implements LoaderInterface {
 
 		// extract first line as header columns
 		$header = explode("\t", $rows[0]);
+		// remove last empty columns (if any)
+		foreach(array_reverse(array_keys($header)) as $k) {
+			if (!empty($header[$k])) {
+				break;
+			}
+			unset($header[$k]);
+		}
 
 		$messages = array();
 		for ($i = 1, $len = count($rows); $i < $len; $i++) {
+			// split column, may create more columns than header has
 			$cols = explode("\t", $rows[$i]);
 			if (empty($cols[0])) {
 				continue;
@@ -94,21 +102,33 @@ class WordsLoader extends UnicodeConverter implements LoaderInterface {
 			// : but lets limit it for description in here
 			$newArray = array();
 
-			// skip columns like 'da, daa, dad, dag'
-			$keepColumns = array(
-				'name', 'women_name', 'description', 'description2',
-				'p', 'member', 'tooltip',
+			// discard these columns from output
+			$skipColumns = array(
+				'*HASH_VALUE',
+				$this->keyExtension[$sheet][0],
+				'* noms français',
 			);
+
+			//
+			$col = '_undef';
 			foreach ($cols as $k => $v) {
-				if (!in_array($header[$k], $keepColumns)) {
-					// skip unwanted columns
+				if (isset($header[$k]) && in_array($header[$k], $skipColumns)) {
 					continue;
 				}
+
 				if ($k == 'description' || $k == 'description2') {
 					$v = str_replace('\n', "\n", $v);
 				}
-				$col = $header[$k];
-				$newArray[$col] = $v;
+
+				// only move to next column if header exists and has non-empty value
+				// should only be last columns and this will join those with previous one
+				if (isset($header[$k]) && !empty($k)) {
+					$col = $header[$k];
+					$newArray[$col] = trim($v);
+				} else {
+					// no trim
+					$newArray[$col] .= $v;
+				}
 			}
 
 			$messages[$sheetName][$key] = $newArray;
