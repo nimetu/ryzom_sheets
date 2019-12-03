@@ -39,6 +39,10 @@ class WordsLoader extends UnicodeConverter implements LoaderInterface {
 		'outpost' => array('outpost ID', ''),
 	);
 
+	function addCustomExt($ext, $array) {
+		$this->keyExtension[$ext] = $array;
+	}
+
 	function getSheets() {
 		return array_keys($this->keyExtension);
 	}
