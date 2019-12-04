@@ -37,6 +37,12 @@ class WordsLoader extends UnicodeConverter implements LoaderInterface {
 		'sphrase' => array('sphrase ID', '.sphrase'),
 		'title' => array('title_id', ''),
 		'outpost' => array('outpost ID', ''),
+		//
+		'race' => ['race ID', ''],
+		'damagetype' => ['damageTypeId', ''],
+		'ecosystem' => ['ecosysteme ID', ''],
+		'score' => ['score_ID', ''],
+		'characteristic' => ['characteristic_ID', ''],
 	);
 
 	function addCustomExt($ext, $array) {
