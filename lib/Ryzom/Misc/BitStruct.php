@@ -202,7 +202,9 @@ class BitStruct {
 	}
 
 	/**
-	 * Convert big number into hex
+	 * Convert big number into hex.
+	 *
+	 * Resulting string will contain even number of chars.
 	 *
 	 * @param string $dec
 	 *
@@ -215,6 +217,10 @@ class BitStruct {
 			$result = dechex($mod).$result;
 			$val = bcdiv(bcsub($val, $mod), 16);
 		} while ($val !== '0');
+
+		if (strlen($result) % 2 !== 0) {
+			$result = '0'.$result;
+		}
 
 		return $result;
 	}
