@@ -28,7 +28,7 @@ namespace Ryzom\Misc;
  * Note:
  * $bit->{'Field1'} is used to silence IDE 'Field not found' warnings
  */
-class BitStructTest extends \PHPUnit_Framework_TestCase
+class BitStructTest extends \PHPUnit\Framework\TestCase
 {
 
     /**

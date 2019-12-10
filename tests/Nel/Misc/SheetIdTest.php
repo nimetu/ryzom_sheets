@@ -22,7 +22,7 @@
 
 namespace Nel\Misc;
 
-class SheetIdTest extends \PHPUnit_Framework_TestCase {
+class SheetIdTest extends \PHPUnit\Framework\TestCase {
 
 	/**
 	 * @covers Ryzom\Sheets\SheetId::serial

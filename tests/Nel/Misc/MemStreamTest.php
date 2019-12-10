@@ -25,7 +25,7 @@ namespace Nel\Misc;
 /**
  * MemStreamTest
  */
-class MemStreamTest extends \PHPUnit_Framework_TestCase {
+class MemStreamTest extends \PHPUnit\Framework\TestCase {
 
 	public function testBuffer() {
 		$buf = '1234567890abcdef';
@@ -91,7 +91,7 @@ class MemStreamTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals(4, $mem->_format_size('V'));
 		$this->assertEquals(8, $mem->_format_size('d'));
 		$this->assertEquals(1, $mem->_format_size('x'));
-		$this->setExpectedException('\RuntimeException', 'Unknown format {?}');
+		$this->expectException('\RuntimeException', 'Unknown format {?}');
 		$mem->_format_size('?');
 		//throw new \Exception('Unknown format {'.$format.'}');
 	}
@@ -104,7 +104,7 @@ class MemStreamTest extends \PHPUnit_Framework_TestCase {
 		$this->assertEquals($buf, $mem->getBuffer());
 		$this->assertEquals(0, $mem->getPos());
 
-		$this->setExpectedException('\RuntimeException', 'Buffer overflow by 6 bytes');
+		$this->expectException('\RuntimeException', 'Buffer overflow by 6 bytes');
 		$mem->serial_byte($result, 10);
 	}
 
