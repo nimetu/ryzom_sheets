@@ -117,6 +117,7 @@ class WordsLoader extends UnicodeConverter implements LoaderInterface {
 				'*HASH_VALUE',
 				$this->keyExtension[$sheet][0],
 				'* noms français',
+				'* nom en français',
 			);
 
 			//
@@ -134,6 +135,11 @@ class WordsLoader extends UnicodeConverter implements LoaderInterface {
 				// should only be last columns and this will join those with previous one
 				if (isset($header[$k]) && !empty($k)) {
 					$col = $header[$k];
+					// bug in item_words_es.txt
+					if ($col === 'descripción') {
+						$col = 'description';
+						$v = str_replace('\n', "\n", $v);
+					}
 					$newArray[$col] = trim($v);
 				} else {
 					// no trim
