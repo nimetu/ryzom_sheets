@@ -51,6 +51,7 @@ use Nel\Misc\StreamInterface;
  * @property int SPCost
  * @property int ActionNature
  * @property array RequiredSkills
+ * @property array RequireAllSkills
  * @property array RequiredBricks
  * @property int AvoidCyclic
  * @property int UsableWithEmptyHands
@@ -109,6 +110,13 @@ class SbrickSheet implements StreamInterface {
 			$row = new CRequiredSkill();
 			$row->serial($s);
 			$this->RequiredSkills[] = $row;
+		}
+		$this->RequireAllSkills = array();
+		$s->serial_uint32($nbItems);
+		for ($nb = 0; $nb < $nbItems; $nb++) {
+			$row = new CRequiredSkill();
+			$row->serial($s);
+			$this->RequireAllSkills[] = $row;
 		}
 		$s->serial_uint32($nbItems);
 		$s->serial_uint32($this->RequiredBricks, $nbItems);

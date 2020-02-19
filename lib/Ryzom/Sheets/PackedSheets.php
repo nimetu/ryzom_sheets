@@ -63,7 +63,7 @@ class PackedSheets implements PackedSheetsCollection, StreamInterface {
 		'world' => 1,
 		//'weather_function_params' => 2,
 		//'mission_icon' => 0,
-		'sbrick' => 32,
+		'sbrick' => 33,
 		'sphrase' => 4,
 		'skill_tree' => 5,
 		//'titles' => 1,
