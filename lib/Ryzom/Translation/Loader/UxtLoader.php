@@ -48,7 +48,7 @@ class UxtLoader extends UnicodeConverter implements LoaderInterface {
 		);
 
 		// split lines at ']\n' boundry, make sure closing tag is not escaped
-		$lines = preg_split("/(?<=(?<!\\\)])\n\s+?/", $data);
+		$lines = preg_split("/(?<=(?<!\\\)])\n\s*?/", $data);
 
 		$messages = array();
 		foreach ($lines as $line) {
