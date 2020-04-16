@@ -41,5 +41,25 @@ class WordsLoaderTest extends \PHPUnit\Framework\TestCase {
 
 		$this->assertEquals($expect, $data);
 	}
+
+	public function testMissingColumnFromRow() {
+		$loader = new WordsLoader();
+
+		$expect = [
+			'title' => [
+				'titleid' => [
+					'name' => 'nameValue',
+					'description' => 'descValue',
+					'extra' => '',
+				],
+			],
+		];
+		$data = $loader->load('title',
+			"*HASH_VALUE\ttitle_id\tname\tdescription\textra\n".
+			"hashValue\ttitleId\tnameValue\tdescValue\n"
+		);
+
+		$this->assertEquals($expect, $data);
+	}
 }
 

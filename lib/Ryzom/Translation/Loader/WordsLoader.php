@@ -107,11 +107,6 @@ class WordsLoader extends UnicodeConverter implements LoaderInterface {
 				continue;
 			}
 
-			// replace array index with header keys and convert line-breaks
-			// : Ryzom Core converts line-breaks for 'name' fields too,
-			// : but lets limit it for description in here
-			$newArray = array();
-
 			// discard these columns from output
 			$skipColumns = array(
 				'*HASH_VALUE',
@@ -120,6 +115,19 @@ class WordsLoader extends UnicodeConverter implements LoaderInterface {
 				'* nom en français',
 			);
 
+			// make sure row is not missing '\t' for last empty columns
+			$newArray = array();
+			foreach($header as $k => $v) {
+				// bug in item_words_es.txt
+				if ($v === 'descripción') {
+					$v = 'description';
+				}
+				if (isset($header[$k]) && in_array($header[$k], $skipColumns)) {
+					continue;
+				}
+				$newArray[$v] = '';
+			}
+
 			//
 			$col = '_undef';
 			foreach ($cols as $k => $v) {
@@ -127,6 +135,7 @@ class WordsLoader extends UnicodeConverter implements LoaderInterface {
 					continue;
 				}
 
+				// note: c++ converts line-breaks for 'name' fields too
 				if ($k == 'description' || $k == 'description2') {
 					$v = str_replace('\n', "\n", $v);
 				}
