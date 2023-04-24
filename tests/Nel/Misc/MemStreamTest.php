@@ -241,7 +241,7 @@ class MemStreamTest extends \PHPUnit\Framework\TestCase {
 
 		$mem->serial_float($val, 1);
 		$this->assertCount(1, $val);
-		$this->assertEquals(3.14, $val[0], '', 0.001);
+		$this->assertEqualsWithDelta(3.14, $val[0], 0.001);
 		$this->assertEquals(4, $mem->getPos());
 	}
 
