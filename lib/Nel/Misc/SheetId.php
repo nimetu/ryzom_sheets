@@ -111,11 +111,13 @@ class SheetId implements StreamInterface {
 	 *
 	 * @param string $sheetName
 	 *
-	 * @return int
+	 * @return int|null
 	 */
 	public function getSheetId($sheetName) {
 		if (isset($this->nameToSheetIdMap[$sheetName])) {
 			return $this->nameToSheetIdMap[$sheetName];
 		}
+
+		return null;
 	}
 }

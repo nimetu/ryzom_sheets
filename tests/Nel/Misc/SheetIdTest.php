@@ -24,25 +24,57 @@ namespace Nel\Misc;
 
 class SheetIdTest extends \PHPUnit\Framework\TestCase {
 
-	/**
-	 * @covers Ryzom\Sheets\SheetId::serial
-	 * @todo   Implement testSerial().
-	 */
-	public function testSerial() {
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+	/** @var MemStream */
+	public $mem;
+
+	/** @var array */
+	public $sheets = array(
+		1 => array('name' => 'a1', 'sheet' => 'a'),
+		2 => array('name' => 'a2', 'sheet' => 'a'),
+		3 => array('name' => 'b1', 'sheet' => 'b'),
+	);
+
+	public function setUp(): void {
+		$buf = new MemStream();
+		$nbItems = count($this->sheets);
+		$buf->serial_uint32($nbItems);
+		foreach($this->sheets as $k => $v) {
+			$buf->serial_uint32($k);
+			$t = $v['name'].'.'.$v['sheet'];
+			$buf->serial_string($t);
+		}
+		$this->mem = new MemStream($buf->getBuffer());
 	}
 
 	/**
-	 * @covers Ryzom\Sheets\SheetId::getSheets
+	 * @todo   Implement testSerial().
+	 */
+	public function testSerial() {
+		$sheet = new SheetId();
+		$sheet->serial($this->mem);
+
+		$this->assertEquals(null, $sheet->getSheetId('does-not-exist'));
+		$this->assertEquals(1, $sheet->getSheetId('a1.a'));
+		$this->assertEquals(2, $sheet->getSheetId('a2.a'));
+	}
+
+	public function testGetSheetIdName() {
+		$sheet = new SheetId();
+		$this->assertEquals('#1', $sheet->getSheetIdName(1));
+
+		$sheet->serial($this->mem);
+		$this->assertEquals('a1.a', $sheet->getSheetIdName(1));
+		$this->assertEquals('a1', $sheet->getSheetIdName(1, false));
+	}
+
+	/**
 	 * @todo   Implement testGetSheets().
 	 */
 	public function testGetSheets() {
-		// Remove the following lines when you implement this test.
-		$this->markTestIncomplete(
-			'This test has not been implemented yet.'
-		);
+		$sheet = new SheetId();
+		$sheet->serial($this->mem);
+
+		$array = $sheet->getSheets();
+		$this->assertArrayIsEqualToArrayIgnoringListOfKeys($this->sheets, $array, array());
 	}
 }

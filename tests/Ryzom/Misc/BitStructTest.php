@@ -31,10 +31,6 @@ namespace Ryzom\Misc;
 class BitStructTest extends \PHPUnit\Framework\TestCase
 {
 
-    /**
-     * @covers Ryzom\Misc\BitStruct::setValue
-     * @covers Ryzom\Misc\BitStruct::__get
-     */
     public function testSetValue()
     {
         $bit = new BitStruct(array(
@@ -64,10 +60,6 @@ class BitStructTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(1, $bit->{'Field5'});
     }
 
-    /**
-     * @covers Ryzom\Misc\BitStruct::getValue
-     * @covers Ryzom\Misc\BitStruct::__set
-     */
     public function _testGetValue()
     {
         // 32bit
@@ -137,4 +129,3 @@ class BitStructTest extends \PHPUnit\Framework\TestCase
 		$this->assertEquals(0x5678, $bit->lo);
 	}
 }
-

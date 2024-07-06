@@ -1,3 +1,4 @@
+.phpunit.cache
 vendor
 
 example/config.php
