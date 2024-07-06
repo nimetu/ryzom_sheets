@@ -47,7 +47,7 @@ class Icfg {
 	/** @var int */
 	public $LastInGameScreenH;
 
-	/** @var IcfgLandmarks[] */
+	/** @var IcfgLandmarks */
 	public $Landmarks;
 
 	/** @var array */
@@ -365,4 +365,4 @@ class Icfg {
 		}
 	}
 
-} 
+}

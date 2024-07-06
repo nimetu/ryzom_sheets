@@ -26,13 +26,23 @@ use Nel\Misc\MemStream;
 use Nel\Misc\StreamInterface;
 
 /**
- * @property int ItemBuilt
- * @property array ItemPartMps
- * @property array FormulaMps
- * @property int ToolType
- * @property int NbItemBuilt
  */
 class CFaberPlan implements StreamInterface {
+
+	/** @var int */
+	public $ItemBuilt;
+
+	/** @var array */
+	public $ItemPartMps;
+
+	/** @var array */
+	public $FormulaMps;
+
+	/** @var int TItemType */
+	public $ToolType;
+
+	/** @var int */
+	public $NbItemBuilt;
 
 	public function serial(MemStream $s) {
 		$s->serial_uint32($this->ItemBuilt);

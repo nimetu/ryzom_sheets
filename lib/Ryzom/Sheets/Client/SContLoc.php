@@ -25,10 +25,6 @@ namespace Ryzom\Sheets\Client;
 use Nel\Misc\MemStream;
 use Nel\Misc\StreamInterface;
 
-/**
- * Class SContLoc
- * @package Ryzom\Sheets\Client
- */
 class SContLoc implements StreamInterface {
 	/** @var string */
 	public $SelectionName;
@@ -57,4 +53,3 @@ class SContLoc implements StreamInterface {
 		$s->serial_float($this->MaxY);
 	}
 }
-

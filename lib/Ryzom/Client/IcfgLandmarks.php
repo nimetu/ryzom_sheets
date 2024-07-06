@@ -26,10 +26,11 @@ use Nel\Misc\MemStream;
 
 /**
  * Class IcfgLandmarks
- *
- * @property int version
  */
 class IcfgLandmarks {
+
+	/** @var int */
+	public $version;
 
 	/** @var  CUserLandMark[] */
 	public $Continents;

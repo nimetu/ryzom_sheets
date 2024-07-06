@@ -25,10 +25,6 @@ namespace Ryzom\Sheets\Client;
 use Nel\Misc\MemStream;
 use Nel\Misc\StreamInterface;
 
-/**
- * Class CContLandMark
- * @package Ryzom\Sheets\Client
- */
 class CContLandMark implements StreamInterface {
 	const CAPITAL = 0;
 	const VILLAGE = 1;
@@ -64,4 +60,3 @@ class CContLandMark implements StreamInterface {
 		$s->serial_string($this->TitleText);
 	}
 }
-

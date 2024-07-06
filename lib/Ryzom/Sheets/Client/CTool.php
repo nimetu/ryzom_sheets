@@ -25,13 +25,18 @@ namespace Ryzom\Sheets\Client;
 use Nel\Misc\MemStream;
 use Nel\Misc\StreamInterface;
 
-/**
- * @property int Skill
- * @property int CraftingToolType
- * @property int CommandRange
- * @property int MaxDonkey
- */
 class CTool implements StreamInterface {
+	/** @var int */
+	public $Skill;
+
+	/** @var int */
+	public $CraftingToolType;
+
+	/** @var int */
+	public $CommandRange;
+
+	/** @var int */
+	public $MaxDonkey;
 
 	public function serial(MemStream $s) {
 		$s->serial_uint32($this->Skill);
@@ -40,4 +45,3 @@ class CTool implements StreamInterface {
 		$s->serial_uint32($this->MaxDonkey);
 	}
 }
-

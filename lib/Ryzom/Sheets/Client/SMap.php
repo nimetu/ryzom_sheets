@@ -25,10 +25,6 @@ namespace Ryzom\Sheets\Client;
 use Nel\Misc\MemStream;
 use Nel\Misc\StreamInterface;
 
-/**
- * Class SMap
- * @package Ryzom\Sheets\Client
- */
 class SMap implements StreamInterface {
 	/** @var string */
 	public $Name;
@@ -73,4 +69,3 @@ class SMap implements StreamInterface {
 		}
 	}
 }
-

@@ -26,11 +26,16 @@ use Nel\Misc\MemStream;
 use Nel\Misc\StreamInterface;
 
 /**
- * @property int WeaponType
- * @property int Skill
- * @property int RangeWeaponType
  */
 class CRangeWeapon implements StreamInterface {
+	/** @var int */
+	public $WeaponType;
+
+	/** @var int */
+	public $Skill;
+
+	/** @var int */
+	public $RangeWeaponType;
 
 	public function serial(MemStream $s) {
 		$s->serial_uint32($this->WeaponType);
@@ -38,4 +43,3 @@ class CRangeWeapon implements StreamInterface {
 		$s->serial_uint32($this->RangeWeaponType);
 	}
 }
-

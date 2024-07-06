@@ -25,10 +25,6 @@ namespace Ryzom\Sheets\Client;
 use Nel\Misc\MemStream;
 use Nel\Misc\StreamInterface;
 
-/**
- * Class CVector2f
- * @package Ryzom\Sheets\Client
- */
 class CVector2f implements StreamInterface {
 	/** @var float */
 	public $X;
@@ -41,4 +37,3 @@ class CVector2f implements StreamInterface {
 		$s->serial_float($this->Y);
 	}
 }
-

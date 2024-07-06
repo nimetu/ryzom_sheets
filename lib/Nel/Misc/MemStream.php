@@ -591,7 +591,7 @@ class MemStream {
 			$this->serial_buffer($buf, strlen($val));
 			if ($val !== $buf) {
 				var_dump($val, $buf);
-				throw new \UnexpectedValueException("Unexpected data from stream, expected (${val})");
+				throw new \UnexpectedValueException("Unexpected data from stream, expected ({$val})");
 			}
 		} else {
 			$this->serial_buffer($val, strlen($val));

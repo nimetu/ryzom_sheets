@@ -167,6 +167,7 @@ class BnpFile implements Iterator {
 	 *
 	 * @return null|string
 	 */
+	#[\ReturnTypeWillChange]
 	public function current() {
 		if (!$this->started) {
 			$this->initialize();
@@ -180,6 +181,7 @@ class BnpFile implements Iterator {
 	 *
 	 * @return null|string
 	 */
+	#[\ReturnTypeWillChange]
 	public function key() {
 		if (!$this->started) {
 			$this->initialize();
@@ -192,7 +194,8 @@ class BnpFile implements Iterator {
 
 	/**
 	 * Iterator: move forward to next element
-	 */
+	*/
+	#[\ReturnTypeWillChange]
 	public function next() {
 		if (!$this->started) {
 			$this->initialize();
@@ -203,6 +206,7 @@ class BnpFile implements Iterator {
 	/**
 	 * Iterator: reset iterator to first element
 	 */
+	#[\ReturnTypeWillChange]
 	public function rewind() {
 		if (!$this->started) {
 			$this->initialize();
@@ -215,6 +219,7 @@ class BnpFile implements Iterator {
 	 *
 	 * @return bool
 	 */
+	#[\ReturnTypeWillChange]
 	public function valid() {
 		if (!$this->started) {
 			$this->initialize();

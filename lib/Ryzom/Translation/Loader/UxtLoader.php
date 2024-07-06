@@ -74,4 +74,3 @@ class UxtLoader extends UnicodeConverter implements LoaderInterface {
 		return array('uxt' => $messages);
 	}
 }
-

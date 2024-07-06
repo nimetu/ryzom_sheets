@@ -25,13 +25,11 @@ namespace Ryzom\Sheets\Client;
 use Nel\Misc\MemStream;
 use Nel\Misc\StreamInterface;
 
-/**
- * @property string Type
- */
 class CTeleport implements StreamInterface {
+	/** @var int */
+	public $Type;
 
 	public function serial(MemStream $s) {
 		$s->serial_uint32($this->Type);
 	}
 }
-

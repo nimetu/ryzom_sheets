@@ -27,12 +27,8 @@ use Ryzom\Sheets\Client\CVector2f;
 
 /**
  * Class Landmark
- *
- * @property string Title
- * @property int Type
  */
 class CUserLandMark {
-
 	/** @var CVector2f */
 	public $Pos;
 
@@ -51,4 +47,4 @@ class CUserLandMark {
 		$s->serial_ucstring($this->Title);
 		$s->serial_byte($this->Type);
 	}
-} 
+}

@@ -26,60 +26,159 @@ use Nel\Misc\MemStream;
 use Nel\Misc\StreamInterface;
 use Ryzom\Common\EItemFamily;
 
-/**
- * @property int Id
- * @property string MaleShape
- * @property string FemaleShape
- * @property string ShapeFyros
- * @property string ShapeFyrosFemale
- * @property string ShapeMatis
- * @property string ShapeMatisFemale
- * @property string ShapeTryker
- * @property string ShapeTrykerFemale
- * @property string ShapeZorai
- * @property string ShapeZoraiFemale
- * @property int SlotBF
- * @property int MapVariant
- * @property int Family
- * @property int ItemType
- * @property string[] Icon
- * @property int[] IconColor
- * @property string IconText
- * @property string AnimSet
- * @property int Color
- * @property bool HasFx
- * @property bool DropOrSell
- * @property bool IsItemNoRent
- * @property bool NeverHideWhenEquiped
- * @property int Stackable
- * @property bool IsConsumable
- * @property float Bulk
- * @property int EquipTime
- * @property CFX FX
- * @property CStaticFX[] StaticFXs
- * @property string[] Effect
- * @property CMpItemPart[] MpItemParts
- * @property int CraftPlan
- * @property int RequiredCharac
- * @property int RequiredCharacLevel
- * @property int RequiredSkill
- * @property int RequiredSkillLevel
- * @property int ItemOrigin
- * @property CArmor Armor
- * @property CMeleeWeapon MeleeWeapon
- * @property CRangeWeapon RangeWeapon
- * @property CAmmo Ammo
- * @property CMp Mp
- * @property CShield Shield
- * @property CTool Tool
- * @property CTeleport Teleport
- * @property CPet Pet
- * @property CGuildOption GuildOption
- * @property CCosmetic Cosmetic
- * @property CConsumable Consumable
- * @property CScroll Scroll
- */
 class ItemSheet implements StreamInterface {
+	/** @var int */
+	public $Id;
+
+	/** @var string */
+	public $MaleShape;
+
+	/** @var string */
+	public $FemaleShape;
+
+	/** @var string */
+	public $ShapeFyros;
+
+	/** @var string */
+	public $ShapeFyrosFemale;
+
+	/** @var string */
+	public $ShapeMatis;
+
+	/** @var string */
+	public $ShapeMatisFemale;
+
+	/** @var string */
+	public $ShapeTryker;
+
+	/** @var string */
+	public $ShapeTrykerFemale;
+
+	/** @var string */
+	public $ShapeZorai;
+
+	/** @var string */
+	public $ShapeZoraiFemale;
+
+	/** @var int */
+	public $SlotBF;
+
+	/** @var int */
+	public $MapVariant;
+
+	/** @var int */
+	public $Family;
+
+	/** @var int */
+	public $ItemType;
+
+	/** @var string[] */
+	public $Icon;
+
+	/** @var int[] */
+	public $IconColor;
+
+	/** @var string*/
+	public $IconText;
+
+	/** @var string */
+	public $AnimSet;
+
+	/** @var int */
+	public $Color;
+
+	/** @var bool */
+	public $HasFx;
+
+	/** @var bool */
+	public $DropOrSell;
+
+	/** @var bool */
+	public $IsItemNoRent;
+
+	/** @var bool */
+	public $NeverHideWhenEquiped;
+
+	/** @var int */
+	public $Stackable;
+
+	/** @var bool */
+	public $IsConsumable;
+
+	/** @var float */
+	public $Bulk;
+
+	/** @var int */
+	public $EquipTime;
+
+	/** @var CFX */
+	public $FX;
+
+	/** @var CStaticFX[] */
+	public $StaticFXs;
+
+	/** @var string[] */
+	public $Effect;
+
+	/** @var CMpItemPart[] */
+	public $MpItemParts;
+
+	/** @var int */
+	public $CraftPlan;
+
+	/** @var int */
+	public $RequiredCharac;
+
+	/** @var int */
+	public $RequiredCharacLevel;
+
+	/** @var int */
+	public $RequiredSkill;
+
+	/** @var int */
+	public $RequiredSkillLevel;
+
+	/** @var int */
+	public $ItemOrigin;
+
+	/** @var CArmor */
+	public $Armor;
+
+	/** @var CMeleeWeapon */
+	public $MeleeWeapon;
+
+	/** @var CRangeWeapon */
+	public $RangeWeapon;
+
+	/** @var CAmmo */
+	public $Ammo;
+
+	/** @var CMp */
+	public $Mp;
+
+	/** @var CShield */
+	public $Shield;
+
+	/** @var CTool */
+	public $Tool;
+
+	/** @var CTeleport */
+	public $Teleport;
+
+	/** @var CPet */
+	public $Pet;
+
+	/** @var CGuildOption */
+	public $GuildOption;
+
+	/** @var CCosmetic */
+	public $Cosmetic;
+
+	/** @var CConsumable */
+	public $Consumable;
+
+	/** @var CScroll */
+	public $Scroll;
 
 	/**
 	 * @param MemStream $s
@@ -119,6 +218,7 @@ class ItemSheet implements StreamInterface {
 		$this->FX = new CFX();
 		$this->FX->serial($s);
 
+		$nbItems = 0;
 		$s->serial_uint32($nbItems);
 		$this->StaticFXs = array();
 		for ($fx = 0; $fx < $nbItems; $fx++) {

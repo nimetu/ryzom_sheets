@@ -25,17 +25,30 @@ namespace Ryzom\Sheets\Client;
 use Nel\Misc\MemStream;
 use Nel\Misc\StreamInterface;
 
-/**
- * @property int Ecosystem
- * @property int MpCategory
- * @property int HarvestSkill
- * @property int Family
- * @property int ItemPartBF
- * @property bool UsedAsCraftRequirement
- * @property int MpColor
- * @property int StatEnergy
- */
 class CMp implements StreamInterface {
+	/** @var int */
+	public $Ecosystem;
+
+	/** @var int */
+	public $MpCategory;
+
+	/** @var int */
+	public $HarvestSkill;
+
+	/** @var int */
+	public $Family;
+
+	/** @var int */
+	public $ItemPartBF;
+
+	/** @var bool */
+	public $UsedAsCraftRequirement;
+
+	/** @var int */
+	public $MpColor;
+
+	/** @var int */
+	public $StatEnergy;
 
 	/**
 	 * @param MemStream $s

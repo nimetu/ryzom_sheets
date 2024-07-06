@@ -27,6 +27,18 @@ use Nel\Misc\StreamInterface;
 
 class OutpostSheet implements StreamInterface {
 
+	/** @var int */
+	public $NbMaxSpawnedSquads;
+
+	/** @var int */
+	public $NbMaxSpawnedMercenarySquads;
+
+	/** @var int */
+	public $ChallengeCost;
+
+	/** @var int */
+	public $MaxTotalSquad;
+
 	public function serial(MemStream $s) {
 		$s->serial_uint32($this->NbMaxSpawnedSquads);
 		$s->serial_uint32($this->NbMaxSpawnedMercenarySquads);
@@ -34,4 +46,3 @@ class OutpostSheet implements StreamInterface {
 		$s->serial_uint32($this->MaxTotalSquad);
 	}
 }
-

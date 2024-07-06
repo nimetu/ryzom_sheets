@@ -25,10 +25,10 @@ namespace Ryzom\Sheets\Client;
 use Nel\Misc\MemStream;
 use Nel\Misc\StreamInterface;
 
-/**
- * @property int ArmorType
- */
 class CArmor implements StreamInterface {
+
+	/** @var int */
+	public $ArmorType;
 
 	public function serial(MemStream $s) {
 		$s->serial_uint32($this->ArmorType);

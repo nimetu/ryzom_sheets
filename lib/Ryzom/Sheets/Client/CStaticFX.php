@@ -25,12 +25,15 @@ namespace Ryzom\Sheets\Client;
 use Nel\Misc\MemStream;
 use Nel\Misc\StreamInterface;
 
-/**
- * @property string Name
- * @property string Bone
- * @property array Offset
- */
 class CStaticFX implements StreamInterface {
+	/** @var string */
+	public $Name;
+
+	/** @var string */
+	public $Bone;
+
+	/** @var float[] {x,y,z} */
+	public $Offset;
 
 	public function serial(MemStream $s) {
 		$s->serial_string($this->Name);
@@ -38,4 +41,3 @@ class CStaticFX implements StreamInterface {
 		$s->serial_float($this->Offset, 3);
 	}
 }
-

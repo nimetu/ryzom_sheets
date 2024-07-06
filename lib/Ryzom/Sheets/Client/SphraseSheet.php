@@ -26,6 +26,17 @@ use Nel\Misc\MemStream;
 use Nel\Misc\StreamInterface;
 
 class SphraseSheet implements StreamInterface {
+	/** @var int SheetId */
+	public $Bricks;
+
+	/** @var bool */
+	public $Castable;
+
+	/** @var bool */
+	public $ShowInActionProgression;
+
+	/** @var bool */
+	public $ShowInAPOnlyIfLearnt;
 
 	public function serial(MemStream $s) {
 		$s->serial_uint32($nbItems);
@@ -35,4 +46,3 @@ class SphraseSheet implements StreamInterface {
 		$s->serial_byte($this->ShowInAPOnlyIfLearnt);
 	}
 }
-

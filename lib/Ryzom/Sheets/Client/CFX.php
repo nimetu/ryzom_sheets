@@ -26,16 +26,31 @@ use Nel\Misc\MemStream;
 use Nel\Misc\StreamInterface;
 
 /**
- * @property float TrailMinSliceTime
- * @property float TrailMaxSliceTime
- * @property float AttackFXOffset
- * @property string Trail
- * @property string AdvantageFX
- * @property string AttackFX
- * @property array AttackFXRot
- * @property float ImpactFXDelay
  */
 class CFX implements StreamInterface {
+	/** @var float */
+	public $TrailMinSliceTime;
+
+	/** @var float */
+	public $TrailMaxSliceTime;
+
+	/** @var float */
+	public $AttackFXOffset;
+
+	/** @var string */
+	public $Trail;
+
+	/** @var string */
+	public $AdvantageFX;
+
+	/** @var string */
+	public $AttackFX;
+
+	/** @var float[] {x,y,z} */
+	public $AttackFXRot;
+
+	/** @var float */
+	public $ImpactFXDelay;
 
 	public function serial(MemStream $s) {
 		$s->serial_float($this->TrailMinSliceTime);
@@ -48,4 +63,3 @@ class CFX implements StreamInterface {
 		$s->serial_float($this->ImpactFXDelay);
 	}
 }
-

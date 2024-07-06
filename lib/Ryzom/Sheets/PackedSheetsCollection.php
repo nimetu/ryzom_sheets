@@ -22,10 +22,6 @@
 
 namespace Ryzom\Sheets;
 
-/**
- * Class PackedSheetsCollection
- * @package Ryzom\Sheets
- */
 interface PackedSheetsCollection {
 
 	/**
@@ -40,4 +36,3 @@ interface PackedSheetsCollection {
 	 */
 	public function get($id);
 }
-

@@ -25,12 +25,16 @@ namespace Ryzom\Sheets\Client;
 use Nel\Misc\MemStream;
 use Nel\Misc\StreamInterface;
 
-/**
- * @property int Skill
- * @property int DamageType
- * @property int Magazine
- */
 class CAmmo implements StreamInterface {
+
+	/** @var int */
+	public $Skill;
+
+	/** @var int */
+	public $DamageType;
+
+	/** @var int */
+	public $Magazine;
 
 	public function serial(MemStream $s) {
 		$s->serial_uint32($this->Skill);

@@ -25,15 +25,15 @@ namespace Ryzom\Sheets\Client;
 use Nel\Misc\MemStream;
 use Nel\Misc\StreamInterface;
 
-/**
- * @property int MoneyCost
- * @property int XpCost
- */
 class CGuildOption implements StreamInterface {
+	/** @var int */
+	public $MoneyCost;
+
+	/** @var int */
+	public $XpCost;
 
 	public function serial(MemStream $s) {
 		$s->serial_uint32($this->MoneyCost);
 		$s->serial_uint32($this->XpCost);
 	}
 }
-

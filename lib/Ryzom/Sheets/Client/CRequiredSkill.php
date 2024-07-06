@@ -25,15 +25,15 @@ namespace Ryzom\Sheets\Client;
 use Nel\Misc\MemStream;
 use Nel\Misc\StreamInterface;
 
-/**
- * @property int Skill
- * @property int Value
- */
 class CRequiredSkill implements StreamInterface {
+	/** @var int */
+	public $Skill;
+
+	/** @var int */
+	public $Value;
 
 	public function serial(MemStream $s) {
 		$s->serial_uint32($this->Skill);
 		$s->serial_uint32($this->Value);
 	}
 }
-

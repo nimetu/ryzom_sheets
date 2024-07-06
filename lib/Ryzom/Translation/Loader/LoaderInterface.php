@@ -41,4 +41,3 @@ interface LoaderInterface {
 	 */
 	function load($sheet, $data);
 }
-

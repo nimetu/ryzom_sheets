@@ -27,6 +27,7 @@ use Nel\Misc\StreamInterface;
 
 class SkilltreeSheet implements StreamInterface {
 
+	/** @var CSkill[] */
 	private $skills;
 
 	public function serial(MemStream $s) {

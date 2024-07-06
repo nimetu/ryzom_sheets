@@ -25,11 +25,10 @@ namespace Ryzom\Sheets\Client;
 use Nel\Misc\MemStream;
 use Nel\Misc\StreamInterface;
 
-/**
- * Class CPrimZone
- * @package Ryzom\Sheets\Client
- */
 class CPrimZone implements StreamInterface {
+
+	/** @var int */
+	private $fillerZeros;
 
 	/** @var CPrimVector[] */
 	public $VPoints;
@@ -47,4 +46,3 @@ class CPrimZone implements StreamInterface {
 		}
 	}
 }
-

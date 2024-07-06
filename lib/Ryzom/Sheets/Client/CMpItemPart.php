@@ -25,11 +25,12 @@ namespace Ryzom\Sheets\Client;
 use Nel\Misc\MemStream;
 use Nel\Misc\StreamInterface;
 
-/**
- * @property int OriginFilter
- * @property array Stats
- */
 class CMpItemPart implements StreamInterface {
+	/** @var int */
+	public $OriginFilter;
+
+	/** @var int */
+	public $Stats;
 
 	public function serial(MemStream $s) {
 		$s->serial_byte($this->OriginFilter);

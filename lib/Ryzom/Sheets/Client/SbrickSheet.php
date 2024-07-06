@@ -25,42 +25,105 @@ namespace Ryzom\Sheets\Client;
 use Nel\Misc\MemStream;
 use Nel\Misc\StreamInterface;
 
-/**
- * @property array UsedSkills
- * @property int BrickFamily
- * @property int IndexInFamily
- * @property int Level
- * @property string sTmp
- * @property array Icon
- * @property array IconColor
- * @property int SabrinaCost
- * @property float SabrinaRelativeCost
- * @property array MandatoryFamilies
- * @property array OptionalFamilies
- * @property array ParameterFamilies
- * @property array CreditFamilies
- * @property string ForbiddenDef
- * @property string ForbiddenExclude
- * @property CFaberPlan FaberPlan
- * @property array Properties
- * @property int MinCastTime
- * @property int MaxCastTime
- * @property int MinRange
- * @property int MaxRange
- * @property int BrickRequiredFlags
- * @property int SPCost
- * @property int ActionNature
- * @property array RequiredSkills
- * @property array RequireAllSkills
- * @property array RequiredBricks
- * @property int AvoidCyclic
- * @property int UsableWithEmptyHands
- * @property int CivRestriction
- * @property int FactionIndex
- * @property int MinFameValue
- * @property int MagicResistType
- */
 class SbrickSheet implements StreamInterface {
+	/** @var array */
+	public $UsedSkills;
+
+	/** @var int */
+	public $BrickFamily;
+
+	/** @var int */
+	public $IndexInFamily;
+
+	/** @var int */
+	public $Level;
+
+	/** @var string */
+	public $sTmp;
+
+	/** @var array */
+	public $Icon;
+
+	/** @var int */
+	public $IconColor;
+
+	/** @var int */
+	public $SabrinaCost;
+
+	/** @var float */
+	public $SabrinaRelativeCost;
+
+	/** @var array */
+	public $MandatoryFamilies;
+
+	/** @var array */
+	public $OptionalFamilies;
+
+	/** @var array */
+	public $ParameterFamilies;
+
+	/** @var array */
+	public $CreditFamilies;
+
+	/** @var string */
+	public $ForbiddenDef;
+
+	/** @var string */
+	public $ForbiddenExclude;
+
+	/** @var CFaberPlan */
+	public $FaberPlan;
+
+	/** @var stdClass[] stdClass::Text */
+	public $Properties;
+
+	/** @var int */
+	public $MinCastTime;
+
+	/** @var int */
+	public $MaxCastTime;
+
+	/** @var int */
+	public $MinRange;
+
+	/** @var int */
+	public $MaxRange;
+
+	/** @var int */
+	public $BrickRequiredFlags;
+
+	/** @var int */
+	public $SPCost;
+
+	/** @var int */
+	public $ActionNature;
+
+	/** @var array SheetId */
+	public $RequiredSkills;
+
+	/** @var array SheetId */
+	public $RequireAllSkills;
+
+	/** @var array SheetId */
+	public $RequiredBricks;
+
+	/** @var int */
+	public $AvoidCyclic;
+
+	/** @var int */
+	public $UsableWithEmptyHands;
+
+	/** @var int */
+	public $CivRestriction;
+
+	/** @var int */
+	public $FactionIndex;
+
+	/** @var int */
+	public $MinFameValue;
+
+	/** @var int */
+	public $MagicResistType;
 
 	public function serial(MemStream $s) {
 		$s->serial_uint32($nbItems);
@@ -128,4 +191,3 @@ class SbrickSheet implements StreamInterface {
 		$s->serial_uint32($this->MagicResistType);
 	}
 }
-

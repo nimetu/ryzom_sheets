@@ -26,11 +26,16 @@ use Nel\Misc\MemStream;
 use Nel\Misc\StreamInterface;
 
 /**
- * @property int OverdoseTimer
- * @property int ConsumptionTime
- * @property array Properties
  */
 class CConsumable implements StreamInterface {
+	/** @var int */
+	public $OverdoseTimer;
+
+	/** @var int */
+	public $ConsumptionTime;
+
+	/** @var string[] */
+	public $Properties;
 
 	public function serial(MemStream $s) {
 		$s->serial_short($this->OverdoseTimer);

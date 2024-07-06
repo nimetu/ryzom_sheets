@@ -25,10 +25,6 @@ namespace Ryzom\Sheets\Client;
 use Nel\Misc\MemStream;
 use Nel\Misc\StreamInterface;
 
-/**
- * Class CPrimVector
- * @package Ryzom\Sheets\Client
- */
 class CPrimVector implements StreamInterface {
 	/** @var float */
 	public $X;
@@ -49,4 +45,3 @@ class CPrimVector implements StreamInterface {
 		$s->serial_byte($this->Selected);
 	}
 }
-

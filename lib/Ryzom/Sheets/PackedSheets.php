@@ -28,8 +28,6 @@ use Ryzom\Sheets\EntityType;
 
 /**
  * Loader of .packed_sheets files
- *
- * @package Ryzom\Sheets
  */
 class PackedSheets implements PackedSheetsCollection, StreamInterface {
 	const HEADER = 'HSKP';
@@ -43,7 +41,10 @@ class PackedSheets implements PackedSheetsCollection, StreamInterface {
 	private $skipDependBlock;
 	private $entries;
 
+	/** @var string key from $typeVersion */
 	private $fileName;
+
+	/** @var int */
 	private $fileVersion;
 
 	private $typeVersion = array(
@@ -96,7 +97,6 @@ class PackedSheets implements PackedSheetsCollection, StreamInterface {
 		$this->skipDependBlock = $skipDependBlock;
 
 		$this->entries = array();
-		$this->entityFactory = new EntityType();
 	}
 
 	protected function readHeader(MemStream $s) {
@@ -145,13 +145,12 @@ class PackedSheets implements PackedSheetsCollection, StreamInterface {
 		}
 
 		// records in this file
-		$s->serial_uint32($this->nbEntries);
-		for ($nbIndex = 0; $nbIndex < $this->nbEntries; $nbIndex++) {
+		$s->serial_uint32($nbEntries);
+		for ($nbIndex = 0; $nbIndex < $nbEntries; $nbIndex++) {
 			$s->serial_uint32($sheetId);
 			$s->serial_uint32($entityType);
 
-
-			$entity = $this->entityFactory->factory($entityType);
+			$entity = EntityType::factory($entityType);
 			$s->serial_uint32($entity->Id);
 
 			// if $sheetId and entity->Id dont match, then we have file format error
@@ -185,4 +184,3 @@ class PackedSheets implements PackedSheetsCollection, StreamInterface {
 		}
 	}
 }
-

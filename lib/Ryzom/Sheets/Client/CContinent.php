@@ -25,10 +25,6 @@ namespace Ryzom\Sheets\Client;
 use Nel\Misc\MemStream;
 use Nel\Misc\StreamInterface;
 
-/**
- * Class CContinent
- * @package Ryzom\Sheets\Client
- */
 class CContinent implements StreamInterface {
 	/** @var string */
 	public $Name;
@@ -60,4 +56,3 @@ class CContinent implements StreamInterface {
 		}
 	}
 }
-

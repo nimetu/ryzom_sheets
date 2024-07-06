@@ -79,7 +79,7 @@ class EntityType {
 	 * @return \Nel\Misc\StreamInterface
 	 * @throws \RuntimeException when $entytyType is unknown
 	 */
-	function factory($entityType) {
+	static function factory($entityType) {
 		switch ($entityType) {
 			//case self::TYPE_CHAR:
 			//	return new Client\PlayerSheet();

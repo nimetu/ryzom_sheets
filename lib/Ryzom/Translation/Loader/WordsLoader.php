@@ -38,11 +38,11 @@ class WordsLoader extends UnicodeConverter implements LoaderInterface {
 		'title' => array('title_id', ''),
 		'outpost' => array('outpost ID', ''),
 		//
-		'race' => ['race ID', ''],
-		'damagetype' => ['damageTypeId', ''],
-		'ecosystem' => ['ecosysteme ID', ''],
-		'score' => ['score_ID', ''],
-		'characteristic' => ['characteristic_ID', ''],
+		'race' => array('race ID', ''),
+		'damagetype' => array('damageTypeId', ''),
+		'ecosystem' => array('ecosysteme ID', ''),
+		'score' => array('score_ID', ''),
+		'characteristic' => array('characteristic_ID', ''),
 	);
 
 	function addCustomExt($ext, $array) {

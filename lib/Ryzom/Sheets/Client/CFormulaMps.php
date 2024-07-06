@@ -25,15 +25,15 @@ namespace Ryzom\Sheets\Client;
 use Nel\Misc\MemStream;
 use Nel\Misc\StreamInterface;
 
-/**
- * @property int ItemRequired
- * @property int Quantity
- */
 class CFormulaMps implements StreamInterface {
+	/** @var int */
+	public $ItemRequired;
+
+	/** @var int */
+	public $Quantity;
 
 	public function serial(MemStream $s) {
 		$s->serial_uint32($this->ItemRequired);
 		$s->serial_uint32($this->Quantity);
 	}
 }
-

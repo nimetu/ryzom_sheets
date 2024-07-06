@@ -25,15 +25,15 @@ namespace Ryzom\Sheets\Client;
 use Nel\Misc\MemStream;
 use Nel\Misc\StreamInterface;
 
-/**
- * @property int FaberTypeFilter
- * @property int Quantity
- */
 class CItemPartMps implements StreamInterface {
+	/** @var int */
+	public $FaberTypeFilter;
+
+	/** @var int */
+	public $Quantity;
 
 	public function serial(MemStream $s) {
 		$s->serial_uint32($this->FaberTypeFilter);
 		$s->serial_uint32($this->Quantity);
 	}
 }
-

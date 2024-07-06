@@ -26,6 +26,191 @@ use Nel\Misc\MemStream;
 use Nel\Misc\StreamInterface;
 
 class CharacterSheet implements StreamInterface {
+	/** @var int EGender */
+	public $Gender;
+
+	/** @var int TPeople */
+	public $Race;
+
+	/** @var string */
+	public $SkelFilename;
+
+	/** @var string */
+	public $AnimSetBaseName;
+
+	/** @var string */
+	public $Automaton;
+
+	/** @var float */
+	public $Scale;
+
+	/** @var int */
+	public $SoundFamily;
+
+	/** @var int */
+	public $SoundVariation;
+
+	/** @var string */
+	public $LodCharacterName;
+
+	/** @var float */
+	public $LodCharacterDistance;
+
+	/** @var bool */
+	public $Selectable;
+
+	/** @var bool */
+	public $Talkable;
+
+	/** @var bool */
+	public $Attackable;
+
+	/** @var bool */
+	public $Givable;
+
+	/** @var bool */
+	public $Mountable;
+
+	/** @var bool */
+	public $Turn;
+
+	/** @var bool */
+	public $SelectableBySpace;
+
+	/** @var int */
+	public $HLState;
+
+	/** @var float */
+	public $CharacterScalePos;
+
+	/** @var float */
+	public $NamePosZLow;
+
+	/** @var float */
+	public $NamePosZNormal;
+
+	/** @var float */
+	public $NamePosZHigh;
+
+	/** @var string */
+	public $Fame;
+
+	/** @var stdClass */
+	public $Body;
+
+	/** @var stdClass */
+	public $Legs;
+
+	/** @var stdClass */
+	public $Arms;
+
+	/** @var stdClass */
+	public $Hands;
+
+	/** @var stdClass */
+	public $Feet;
+
+	/** @var stdClass */
+	public $Head;
+
+	/** @var stdClass */
+	public $Face;
+
+	/** @var stdClass */
+	public $ObjectInRightHand;
+
+	/** @var stdClass */
+	public $ObjectInLeftHand;
+
+	/** @var  int*/
+	public $HairColor;
+
+	/** @var int */
+	public $Skin;
+
+	/** @var int */
+	public $EyesColor;
+
+	/** @var float */
+	public $DistToFront;
+
+	/** @var float */
+	public $DistToBack;
+
+	/** @var float */
+	public $DistToSide;
+
+	/** @var float */
+	public $ColRadius;
+
+	/** @var float */
+	public $ColHeight;
+
+	/** @var float */
+	public $ColLength;
+
+	/** @var float */
+	public $ColWidth;
+
+	/** @var float */
+	public $MaxSpeed;
+
+	/** @var float */
+	public $ClipRadius;
+
+	/** @var float */
+	public $ClipHeight;
+
+	/** @var string[] */
+	public $AlternativeClothes;
+
+	/** @var stdClass[] */
+	public $HairItemList;
+
+	/** @var stdClass[] */
+	public $GroundFX;
+
+	/** @var bool */
+	public $DisplayOSD;
+
+	/** @var string */
+	public $StaticFX;
+
+	/** @var stdClass */
+	public $BodyToBone;
+
+	/** @var string[] */
+	public $AttackLists;
+
+	/** @var bool */
+	public $DisplayInRadar;
+
+	/** @var bool */
+	public $DisplayOSDName;
+
+	/** @var bool */
+	public $DisplayOSDBars;
+
+	/** @var bool */
+	public $DisplayOSDForceOver;
+
+	/** @var bool */
+	public $Traversable;
+
+	/** @var int*/
+	public $RegionForce;
+
+	/** @var int */
+	public $ForceLevel;
+
+	/** @var int*/
+	public $Level;
+
+	/** @var stdClass */
+	public $ProjectileCastRay;
+
+	/** @var bool */
+	public $R2Npc;
 
 	public function serial(MemStream $s) {
 		$s->serial_byte($this->Gender);
@@ -146,4 +331,3 @@ class CharacterSheet implements StreamInterface {
 		$s->serial_byte($this->R2Npc);
 	}
 }
-

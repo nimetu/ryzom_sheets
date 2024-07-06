@@ -31,9 +31,14 @@ use Nel\Misc\StreamInterface;
  */
 class CCosmetic implements StreamInterface {
 
+	/** @var int*/
+	public $VPValue;
+
+	/** @var int EGender */
+	public $Gender;
+
 	public function serial(MemStream $s) {
 		$s->serial_uint32($this->VPValue);
 		$s->serial_uint32($this->Gender);
 	}
 }
-

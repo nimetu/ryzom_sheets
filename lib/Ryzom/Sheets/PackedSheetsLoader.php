@@ -26,10 +26,10 @@ use Nel\Misc\MemStream;
 
 /**
  * Factory class to load .packed_sheets and lmconts.packed files
- *
- * @package Ryzom\Sheets
  */
 class PackedSheetsLoader {
+	/** string */
+	private $path;
 
 	/**
 	 * @param string $path
@@ -68,4 +68,3 @@ class PackedSheetsLoader {
 	}
 
 }
-

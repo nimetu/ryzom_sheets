@@ -25,16 +25,24 @@ namespace Ryzom\Sheets\Client;
 use Nel\Misc\MemStream;
 use Nel\Misc\StreamInterface;
 
-/**
- * @property int Skill
- * @property string SkillCode
- * @property int MaxSkillValue
- * @property int StageType
- * @property int ParentSkill
- * @property array ChildSkills
- *
- */
 class CSkill implements StreamInterface {
+	/** @var int */
+	public $Skill;
+
+	/** @var string */
+	public $SkillCode;
+
+	/** @var int */
+	public $MaxSkillValue;
+
+	/** @var int */
+	public $StageType;
+
+	/** @var int */
+	public $ParentSkill;
+
+	/** @var int[] */
+	public $ChildSkills;
 
 	public function serial(MemStream $s) {
 		$s->serial_uint32($this->Skill);
@@ -47,4 +55,3 @@ class CSkill implements StreamInterface {
 		$s->serial_uint32($this->ChildSkills, $nbChildSkills);
 	}
 }
-

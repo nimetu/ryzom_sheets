@@ -26,12 +26,16 @@ use Nel\Misc\MemStream;
 
 /**
  * Class CInfoWindowSave
- *
- * @property int version
- * @property int X
- * @property int Y
  */
 class CInfoWindowSave {
+	/** @var int */
+	public $version;
+
+	/** @var int */
+	public $X;
+
+	/** @var int */
+	public $Y;
 
 	/**
 	 * @param MemStream $s
@@ -41,4 +45,4 @@ class CInfoWindowSave {
 		$s->serial_sint32($this->X);
 		$s->serial_sint32($this->Y);
 	}
-} 
+}

@@ -28,7 +28,11 @@ class SheetId implements StreamInterface {
 	const BITS_TYPE = 8;
 	//
 
+	/** @var array */
 	private $sheetIdToNameMap;
+
+	/** @var array */
+	private $nameToSheetIdMap;
 
 	function __construct() {
 		$this->sheetIdToNameMap = array();

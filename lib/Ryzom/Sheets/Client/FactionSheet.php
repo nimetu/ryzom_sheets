@@ -27,8 +27,10 @@ use Nel\Misc\StreamInterface;
 
 class FactionSheet implements StreamInterface {
 
+	/** @var string */
+	public $Icon;
+
 	public function serial(MemStream $s) {
 		$s->serial_string($this->Icon);
 	}
 }
-

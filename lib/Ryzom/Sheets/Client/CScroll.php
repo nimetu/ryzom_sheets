@@ -26,12 +26,19 @@ use Nel\Misc\MemStream;
 use Nel\Misc\StreamInterface;
 
 /**
- * @property string Texture
- * @property string LuaCommand;
- * @property string WebCommand;
- * @property string Label;
  */
 class CScroll implements StreamInterface {
+	/** @var string */
+	public $Texture;
+
+	/** @var string */
+	public $LuaCommand;
+
+	/** @var string */
+	public $WebCommand;
+
+	/** @var string */
+	public $Label;
 
 	public function serial(MemStream $s) {
 		$s->serial_string($this->Texture);
@@ -40,4 +47,3 @@ class CScroll implements StreamInterface {
 		$s->serial_string($this->Label);
 	}
 }
-

@@ -25,13 +25,18 @@ namespace Ryzom\Sheets\Client;
 use Nel\Misc\MemStream;
 use Nel\Misc\StreamInterface;
 
-/**
- * @property int WeaponType
- * @property int Skill
- * @property int DamageType
- * @property int MeleeRange
- */
 class CMeleeWeapon implements StreamInterface {
+	/** @var int */
+	public $WeaponType;
+
+	/** @var int */
+	public $Skill;
+
+	/** @var int */
+	public $DamageType;
+
+	/** @var int */
+	public $MeleeRange;
 
 	public function serial(MemStream $s) {
 		$s->serial_uint32($this->WeaponType);
@@ -40,4 +45,3 @@ class CMeleeWeapon implements StreamInterface {
 		$s->serial_sint32($this->MeleeRange);
 	}
 }
-

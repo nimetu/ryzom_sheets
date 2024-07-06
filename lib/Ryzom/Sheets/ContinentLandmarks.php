@@ -25,13 +25,9 @@ namespace Ryzom\Sheets;
 use Nel\Misc\MemStream;
 use Nel\Misc\StreamInterface;
 
-/**
- * Class ContinentLandmarks
- * @package Ryzom\Sheets
- */
 class ContinentLandmarks implements PackedSheetsCollection, StreamInterface {
 
-	/** @var array */
+	/** @var array {continents, worldmap, aliasmap} */
 	protected $entries;
 
 	public function serial(MemStream $s) {
@@ -90,4 +86,3 @@ class ContinentLandmarks implements PackedSheetsCollection, StreamInterface {
 		}
 	}
 }
-

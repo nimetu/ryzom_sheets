@@ -25,10 +25,6 @@ namespace Ryzom\Sheets\Client;
 use Nel\Misc\MemStream;
 use Nel\Misc\StreamInterface;
 
-/**
- * Class WorldSheet
- * @package Ryzom\Sheets\Client
- */
 class WorldSheet implements StreamInterface {
 	/** @var string */
 	public $Name;
@@ -61,4 +57,3 @@ class WorldSheet implements StreamInterface {
 		}
 	}
 }
-

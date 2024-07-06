@@ -26,6 +26,26 @@ use Nel\Misc\MemStream;
 use Nel\Misc\StreamInterface;
 
 class RaceStatsSheet implements StreamInterface {
+	/** @var int[] */
+	public $CharacStartValue;
+
+	/** @var stdClass */
+	public $GenderInfos;
+
+	/** var int */
+	public $People;
+
+	/** @var int */
+	public $Skin;
+
+	/** @var string */
+	public $Automaton;
+
+	/** @var stdClass */
+	public $BodyToBone;
+
+	/** @var string[] */
+	public $AttackLists;
 
 	public function serial(MemStream $s) {
 		// CGenderInfo
@@ -55,7 +75,6 @@ class RaceStatsSheet implements StreamInterface {
 			$s->serial_float($var->NamePosZHigh);
 		};
 
-		$numCharacteristice = 8;
 		$s->serial_byte($this->CharacStartValue, 8);
 		$gi($this->GenderInfos[0]);
 		$gi($this->GenderInfos[1]);

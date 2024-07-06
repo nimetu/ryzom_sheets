@@ -25,13 +25,12 @@ namespace Ryzom\Sheets\Client;
 use Nel\Misc\MemStream;
 use Nel\Misc\StreamInterface;
 
-/**
- * @property int Slot
- */
 class CPet implements StreamInterface {
+
+	/** @var int */
+	public $Slot;
 
 	public function serial(MemStream $s) {
 		$s->serial_uint32($this->Slot);
 	}
 }
-
