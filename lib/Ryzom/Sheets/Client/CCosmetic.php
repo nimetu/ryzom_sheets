@@ -24,18 +24,15 @@ namespace Ryzom\Sheets\Client;
 
 use Nel\Misc\MemStream;
 use Nel\Misc\StreamInterface;
+use Ryzom\Common\EGender;
 
-/**
- * @property int VPValue
- * @property int Gender
- */
 class CCosmetic implements StreamInterface {
 
-	/** @var int*/
-	public $VPValue;
+	/** @var int */
+	public $VPValue = 0;
 
 	/** @var int EGender */
-	public $Gender;
+	public $Gender = EGender::MALE;
 
 	public function serial(MemStream $s) {
 		$s->serial_uint32($this->VPValue);

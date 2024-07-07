@@ -27,10 +27,10 @@ use Nel\Misc\StreamInterface;
 
 class SMapChild implements StreamInterface {
 	/** @var string */
-	public $Name;
+	public $Name = '';
 
 	/** @var string */
-	public $ZoneName;
+	public $ZoneName = '';
 
 	public function serial(MemStream $s) {
 		$s->serial_string($this->Name);

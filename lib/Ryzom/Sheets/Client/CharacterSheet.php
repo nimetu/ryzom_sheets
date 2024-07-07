@@ -24,193 +24,195 @@ namespace Ryzom\Sheets\Client;
 
 use Nel\Misc\MemStream;
 use Nel\Misc\StreamInterface;
+use Ryzom\Common\EGender;
+use Ryzom\Common\TPeople;
 
 class CharacterSheet implements StreamInterface {
 	/** @var int EGender */
-	public $Gender;
+	public $Gender = EGender::MALE;
 
 	/** @var int TPeople */
-	public $Race;
+	public $Race = TPeople::FYROS;
 
 	/** @var string */
-	public $SkelFilename;
+	public $SkelFilename = '';
 
 	/** @var string */
-	public $AnimSetBaseName;
+	public $AnimSetBaseName = '';
 
 	/** @var string */
-	public $Automaton;
+	public $Automaton = '';
 
 	/** @var float */
-	public $Scale;
+	public $Scale = 0;
 
 	/** @var int */
-	public $SoundFamily;
+	public $SoundFamily = 0;
 
 	/** @var int */
-	public $SoundVariation;
+	public $SoundVariation = 0;
 
 	/** @var string */
-	public $LodCharacterName;
+	public $LodCharacterName = '';
 
 	/** @var float */
-	public $LodCharacterDistance;
+	public $LodCharacterDistance = 0;
 
 	/** @var bool */
-	public $Selectable;
+	public $Selectable = false;
 
 	/** @var bool */
-	public $Talkable;
+	public $Talkable = false;
 
 	/** @var bool */
-	public $Attackable;
+	public $Attackable = false;
 
 	/** @var bool */
-	public $Givable;
+	public $Givable = false;
 
 	/** @var bool */
-	public $Mountable;
+	public $Mountable = false;
 
 	/** @var bool */
-	public $Turn;
+	public $Turn = false;
 
 	/** @var bool */
-	public $SelectableBySpace;
+	public $SelectableBySpace = false;
 
 	/** @var int */
-	public $HLState;
+	public $HLState = 0;
 
 	/** @var float */
-	public $CharacterScalePos;
+	public $CharacterScalePos = 0;
 
 	/** @var float */
-	public $NamePosZLow;
+	public $NamePosZLow = 0;
 
 	/** @var float */
-	public $NamePosZNormal;
+	public $NamePosZNormal = 0;
 
 	/** @var float */
-	public $NamePosZHigh;
+	public $NamePosZHigh = 0;
 
 	/** @var string */
-	public $Fame;
+	public $Fame = '';
 
-	/** @var stdClass */
-	public $Body;
+	/** @var \stdClass|null */
+	public $Body = null;
 
-	/** @var stdClass */
-	public $Legs;
+	/** @var \stdClass|null */
+	public $Legs = null;
 
-	/** @var stdClass */
-	public $Arms;
+	/** @var \stdClass|null */
+	public $Arms = null;
 
-	/** @var stdClass */
-	public $Hands;
+	/** @var \stdClass|null */
+	public $Hands = null;
 
-	/** @var stdClass */
-	public $Feet;
+	/** @var \stdClass|null */
+	public $Feet = null;
 
-	/** @var stdClass */
-	public $Head;
+	/** @var \stdClass|null */
+	public $Head = null;
 
-	/** @var stdClass */
-	public $Face;
+	/** @var \stdClass|null */
+	public $Face = null;
 
-	/** @var stdClass */
-	public $ObjectInRightHand;
+	/** @var \stdClass|null */
+	public $ObjectInRightHand = null;
 
-	/** @var stdClass */
-	public $ObjectInLeftHand;
+	/** @var \stdClass|null */
+	public $ObjectInLeftHand = null;
 
-	/** @var  int*/
-	public $HairColor;
-
-	/** @var int */
-	public $Skin;
+	/** @var  int */
+	public $HairColor = 0;
 
 	/** @var int */
-	public $EyesColor;
+	public $Skin = 0;
+
+	/** @var int */
+	public $EyesColor = 0;
 
 	/** @var float */
-	public $DistToFront;
+	public $DistToFront = 0;
 
 	/** @var float */
-	public $DistToBack;
+	public $DistToBack = 0;
 
 	/** @var float */
-	public $DistToSide;
+	public $DistToSide = 0;
 
 	/** @var float */
-	public $ColRadius;
+	public $ColRadius = 0;
 
 	/** @var float */
-	public $ColHeight;
+	public $ColHeight = 0;
 
 	/** @var float */
-	public $ColLength;
+	public $ColLength = 0;
 
 	/** @var float */
-	public $ColWidth;
+	public $ColWidth = 0;
 
 	/** @var float */
-	public $MaxSpeed;
+	public $MaxSpeed = 0;
 
 	/** @var float */
-	public $ClipRadius;
+	public $ClipRadius = 0;
 
 	/** @var float */
-	public $ClipHeight;
+	public $ClipHeight = 0;
 
 	/** @var string[] */
-	public $AlternativeClothes;
+	public $AlternativeClothes = array();
 
-	/** @var stdClass[] */
-	public $HairItemList;
+	/** @var \stdClass[] */
+	public $HairItemList = array();
 
-	/** @var stdClass[] */
-	public $GroundFX;
+	/** @var \stdClass[] */
+	public $GroundFX = array();
 
 	/** @var bool */
-	public $DisplayOSD;
+	public $DisplayOSD = false;
 
 	/** @var string */
-	public $StaticFX;
+	public $StaticFX = '';
 
-	/** @var stdClass */
-	public $BodyToBone;
+	/** @var \stdClass|null */
+	public $BodyToBone = null;
 
 	/** @var string[] */
-	public $AttackLists;
+	public $AttackLists = array();
 
 	/** @var bool */
-	public $DisplayInRadar;
+	public $DisplayInRadar = false;
 
 	/** @var bool */
-	public $DisplayOSDName;
+	public $DisplayOSDName = false;
 
 	/** @var bool */
-	public $DisplayOSDBars;
+	public $DisplayOSDBars = false;
 
 	/** @var bool */
-	public $DisplayOSDForceOver;
+	public $DisplayOSDForceOver = false;
 
 	/** @var bool */
-	public $Traversable;
-
-	/** @var int*/
-	public $RegionForce;
+	public $Traversable = false;
 
 	/** @var int */
-	public $ForceLevel;
+	public $RegionForce = 0;
 
-	/** @var int*/
-	public $Level;
+	/** @var int */
+	public $ForceLevel = 0;
 
-	/** @var stdClass */
-	public $ProjectileCastRay;
+	/** @var int */
+	public $Level = 0;
+
+	/** @var \stdClass[] */
+	public $ProjectileCastRay = array();
 
 	/** @var bool */
-	public $R2Npc;
+	public $R2Npc = false;
 
 	public function serial(MemStream $s) {
 		$s->serial_byte($this->Gender);
@@ -237,7 +239,12 @@ class CharacterSheet implements StreamInterface {
 		$s->serial_float($this->NamePosZHigh);
 		$s->serial_string($this->Fame);
 
-		// CEquipment::serial()
+		/**
+		 * CEquipment::serial()
+		 *
+		 * @psalm-suppress MissingClosureReturnType
+		 * @psalm-suppress MissingClosureParamType
+		 */
 		$eq = function(&$row) use($s) {
 			$row = new \stdClass();
 			$s->serial_string($row->Item);

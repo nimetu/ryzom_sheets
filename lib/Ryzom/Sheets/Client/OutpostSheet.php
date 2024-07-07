@@ -26,18 +26,17 @@ use Nel\Misc\MemStream;
 use Nel\Misc\StreamInterface;
 
 class OutpostSheet implements StreamInterface {
+	/** @var int */
+	public $NbMaxSpawnedSquads = 0;
 
 	/** @var int */
-	public $NbMaxSpawnedSquads;
+	public $NbMaxSpawnedMercenarySquads = 0;
 
 	/** @var int */
-	public $NbMaxSpawnedMercenarySquads;
+	public $ChallengeCost = 0;
 
 	/** @var int */
-	public $ChallengeCost;
-
-	/** @var int */
-	public $MaxTotalSquad;
+	public $MaxTotalSquad = 0;
 
 	public function serial(MemStream $s) {
 		$s->serial_uint32($this->NbMaxSpawnedSquads);

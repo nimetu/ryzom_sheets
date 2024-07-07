@@ -23,23 +23,18 @@
 namespace Ryzom\Client;
 
 use Nel\Misc\MemStream;
+use Nel\Misc\StreamInterface;
 
-/**
- * Class CInfoWindowSave
- */
-class CInfoWindowSave {
+class CInfoWindowSave implements StreamInterface {
 	/** @var int */
-	public $version;
+	public $version = 0;
 
 	/** @var int */
-	public $X;
+	public $X = 0;
 
 	/** @var int */
-	public $Y;
+	public $Y = 0;
 
-	/**
-	 * @param MemStream $s
-	 */
 	public function serial(MemStream $s) {
 		$s->serialVersion($this->version);
 		$s->serial_sint32($this->X);

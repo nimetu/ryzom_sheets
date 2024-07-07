@@ -24,25 +24,23 @@ namespace Ryzom\Sheets\Client;
 
 use Nel\Misc\MemStream;
 use Nel\Misc\StreamInterface;
+use Ryzom\Common\TItemType;
 
-/**
- */
 class CFaberPlan implements StreamInterface {
-
 	/** @var int */
-	public $ItemBuilt;
+	public $ItemBuilt = 0;
 
 	/** @var array */
-	public $ItemPartMps;
+	public $ItemPartMps = array();
 
 	/** @var array */
-	public $FormulaMps;
+	public $FormulaMps = array();
 
 	/** @var int TItemType */
-	public $ToolType;
+	public $ToolType = TItemType::UNDEFINED;
 
 	/** @var int */
-	public $NbItemBuilt;
+	public $NbItemBuilt = 0;
 
 	public function serial(MemStream $s) {
 		$s->serial_uint32($this->ItemBuilt);
@@ -66,4 +64,3 @@ class CFaberPlan implements StreamInterface {
 		$s->serial_uint32($this->NbItemBuilt);
 	}
 }
-

@@ -27,10 +27,10 @@ use Nel\Misc\StreamInterface;
 
 class CVector2f implements StreamInterface {
 	/** @var float */
-	public $X;
+	public $X = 0;
 
 	/** @var float */
-	public $Y;
+	public $Y = 0;
 
 	public function serial(MemStream $s) {
 		$s->serial_float($this->X);

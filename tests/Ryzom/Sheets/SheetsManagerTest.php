@@ -18,9 +18,9 @@ class SheetsManagerTest extends \PHPUnit\Framework\TestCase {
     private $sheetsManager;
 
     public function setUp(): void {
-        $sheets = [
+        $sheets = array(
             self::SKILL_TREE_ID => 'skills.skill_tree',
-        ];
+        );
         $mem = new MemStream();
         $nb = count($sheets);
         $mem->serial_uint32($nb);
@@ -35,12 +35,22 @@ class SheetsManagerTest extends \PHPUnit\Framework\TestCase {
         $this->sheetsManager = new SheetsManager($this->sheetId, $this->psLoader);
     }
 
-    public function testFindBy() {
+    public function testDeprecatedGet() {
         /** @var SkilltreeSheet */
         $result = $this->sheetsManager->findById(self::SKILL_TREE_ID);
 
         $this->assertNotEmpty($result, 'Returned skilltree should not be empty');
-        $sf = $result->get('sf');
+        $sf = $result->get(0);
+        $this->assertNotEmpty($sf, 'Expected to get SC skill');
+        $this->assertEquals($sf->SkillCode, 'SC', 'Expected SC, got '.$sf->SkillCode);
+    }
+
+    public function testFind() {
+        /** @var SkilltreeSheet */
+        $result = $this->sheetsManager->findById(self::SKILL_TREE_ID);
+
+        $this->assertNotEmpty($result, 'Returned skilltree should not be empty');
+        $sf = $result->find('sf');
         $this->assertNotEmpty($sf, 'Expected to get SF skill');
     }
 }

@@ -27,10 +27,10 @@ use Nel\Misc\StreamInterface;
 
 class CFormulaMps implements StreamInterface {
 	/** @var int */
-	public $ItemRequired;
+	public $ItemRequired = 0;
 
 	/** @var int */
-	public $Quantity;
+	public $Quantity = 0;
 
 	public function serial(MemStream $s) {
 		$s->serial_uint32($this->ItemRequired);

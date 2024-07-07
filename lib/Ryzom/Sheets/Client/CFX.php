@@ -25,32 +25,30 @@ namespace Ryzom\Sheets\Client;
 use Nel\Misc\MemStream;
 use Nel\Misc\StreamInterface;
 
-/**
- */
 class CFX implements StreamInterface {
 	/** @var float */
-	public $TrailMinSliceTime;
+	public $TrailMinSliceTime = 0;
 
 	/** @var float */
-	public $TrailMaxSliceTime;
+	public $TrailMaxSliceTime = 0;
 
 	/** @var float */
-	public $AttackFXOffset;
+	public $AttackFXOffset = 0;
 
 	/** @var string */
-	public $Trail;
+	public $Trail = '';
 
 	/** @var string */
-	public $AdvantageFX;
+	public $AdvantageFX = '';
 
 	/** @var string */
-	public $AttackFX;
+	public $AttackFX = '';
 
-	/** @var float[] {x,y,z} */
-	public $AttackFXRot;
+	/** @var float[] [x,y,z] */
+	public $AttackFXRot = array(0, 0, 0);
 
 	/** @var float */
-	public $ImpactFXDelay;
+	public $ImpactFXDelay = 0;
 
 	public function serial(MemStream $s) {
 		$s->serial_float($this->TrailMinSliceTime);

@@ -27,16 +27,16 @@ use Nel\Misc\StreamInterface;
 
 class CPrimVector implements StreamInterface {
 	/** @var float */
-	public $X;
+	public $X = 0;
 
 	/** @var float */
-	public $Y;
+	public $Y = 0;
 
 	/** @var float */
-	public $Z;
+	public $Z = 0;
 
 	/** @var bool */
-	public $Selected;
+	public $Selected = false;
 
 	public function serial(MemStream $s) {
 		$s->serial_float($this->X);

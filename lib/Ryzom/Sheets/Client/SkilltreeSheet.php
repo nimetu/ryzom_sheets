@@ -26,9 +26,11 @@ use Nel\Misc\MemStream;
 use Nel\Misc\StreamInterface;
 
 class SkilltreeSheet implements StreamInterface {
+	/** @var array<string,CSkill> */
+	private $skills = array();
 
-	/** @var CSkill[] */
-	private $skills;
+	/** @var array<int,string> */
+	private $indices = array();
 
 	public function serial(MemStream $s) {
 
@@ -38,7 +40,9 @@ class SkilltreeSheet implements StreamInterface {
 			$skill = new CSkill();
 			$skill->serial($s);
 
-			$this->skills[$skill->Skill] = $skill;
+			$code = strtolower($skill->SkillCode);
+			$this->skills[$code] = $skill;
+			$this->indices[] = $code;
 		}
 	}
 
@@ -50,14 +54,31 @@ class SkilltreeSheet implements StreamInterface {
 	}
 
 	/**
-	 * @param $skill
+	 * @param int $index
 	 *
-	 * @return CSkill
+	 * @return CSkill|null
+	 *
+	 * @deprecated use getSkills() to get full array or find() with skill code
 	 */
-	public function get($skill) {
+	public function get($index) {
+		if (!isset($this->indices[$index])) {
+			return null;
+		}
+
+		$code = $this->indices[$index];
+		return $this->skills[$code];
+	}
+
+	/**
+	 * @param string $skill
+	 *
+	 * @return CSkill|null
+	 */
+	public function find($skill) {
 		if (isset($this->skills[$skill])) {
 			return $this->skills[$skill];
 		}
+
+		return null;
 	}
 }
-

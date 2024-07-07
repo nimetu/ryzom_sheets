@@ -27,16 +27,16 @@ use Nel\Misc\StreamInterface;
 
 class CMeleeWeapon implements StreamInterface {
 	/** @var int */
-	public $WeaponType;
+	public $WeaponType = 0;
 
 	/** @var int */
-	public $Skill;
+	public $Skill = 0;
 
 	/** @var int */
-	public $DamageType;
+	public $DamageType = 0;
 
 	/** @var int */
-	public $MeleeRange;
+	public $MeleeRange = 0;
 
 	public function serial(MemStream $s) {
 		$s->serial_uint32($this->WeaponType);

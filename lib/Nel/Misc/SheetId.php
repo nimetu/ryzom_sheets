@@ -40,15 +40,14 @@ class SheetId implements StreamInterface {
 	}
 
 	/**
-	 * @param $data
+	 * @param string $data
+	 *
+	 * @return void
 	 */
 	function load($data) {
 		$this->serial(new MemStream($data));
 	}
 
-	/**
-	 * @param MemStream $s
-	 */
 	public function serial(MemStream $s) {
 		$s->serial_uint32($nbItems);
 

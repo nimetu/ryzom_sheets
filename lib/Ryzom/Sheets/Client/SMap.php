@@ -27,28 +27,28 @@ use Nel\Misc\StreamInterface;
 
 class SMap implements StreamInterface {
 	/** @var string */
-	public $Name;
+	public $Name = '';
 
 	/** @var string */
-	public $ContinentName;
+	public $ContinentName = '';
 
 	/** @var string */
-	public $BitmapName;
+	public $BitmapName = '';
 
 	/** @var float */
-	public $MinX;
+	public $MinX = 0;
 
 	/** @var float */
-	public $MinY;
+	public $MinY = 0;
 
 	/** @var float */
-	public $MaxX;
+	public $MaxX = 0;
 
 	/** @var float */
-	public $MaxY;
+	public $MaxY = 0;
 
 	/** @var SMapChild[] */
-	public $Children;
+	public $Children = array();
 
 	public function serial(MemStream $s) {
 		$s->serial_string($this->Name);

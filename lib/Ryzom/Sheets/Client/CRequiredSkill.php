@@ -27,10 +27,10 @@ use Nel\Misc\StreamInterface;
 
 class CRequiredSkill implements StreamInterface {
 	/** @var int */
-	public $Skill;
+	public $Skill = 0;
 
 	/** @var int */
-	public $Value;
+	public $Value = 0;
 
 	public function serial(MemStream $s) {
 		$s->serial_uint32($this->Skill);

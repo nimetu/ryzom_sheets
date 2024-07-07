@@ -24,15 +24,28 @@ namespace Ryzom\Sheets;
 
 use Nel\Misc\MemStream;
 use Nel\Misc\StreamInterface;
+use Ryzom\Sheets\Client\CContinent;
+use Ryzom\Sheets\Client\CContLandMark;
 
 class ContinentLandmarks implements PackedSheetsCollection, StreamInterface {
 
-	/** @var array {continents, worldmap, aliasmap} */
-	protected $entries;
+	/**
+	 * @var array {
+	 * 	 continents: array<string,CContinent>,
+	 *   worldmap: array<string,CContLandMark>,
+	 *   aliasmap: array<int,string>
+	 * }
+	 */
+	protected $entries = array(
+		'continents' => array(),
+		'worldmap' => array(),
+		'aliasmap' => array()
+	);
 
 	public function serial(MemStream $s) {
 		$s->serial_byte($ver);
 
+		/** @var array<string,Client\CContinent> */
 		$continents = array();
 		$s->serial_uint32($nbItems);
 		for ($i = 0; $i < $nbItems; $i++) {
@@ -44,6 +57,7 @@ class ContinentLandmarks implements PackedSheetsCollection, StreamInterface {
 		}
 		$this->entries['continents'] = $continents;
 
+		/** @var array<string,Client\CContLandMark> */
 		$worldmap = array();
 		$s->serial_uint32($nbItems);
 		for ($i = 0; $i < $nbItems; $i++) {
@@ -55,6 +69,7 @@ class ContinentLandmarks implements PackedSheetsCollection, StreamInterface {
 		}
 		$this->entries['worldmap'] = $worldmap;
 
+		/** @var array<int,string> */
 		$aliasmap = array();
 		if ($ver >= 1) {
 			$s->serial_uint32($nbItems);
@@ -76,13 +91,15 @@ class ContinentLandmarks implements PackedSheetsCollection, StreamInterface {
 	}
 
 	/**
-	 * @param string $id [continents, worldmap, aliasmap]
+	 * @param int|string $id [continents, worldmap, aliasmap]
 	 *
-	 * @return mixed
+	 * @return array<string,CContinent>|array<string,CContLandMark>|array<int,string>|null
 	 */
 	public function get($id) {
 		if (isset($this->entries[$id])) {
 			return $this->entries[$id];
 		}
+
+		return null;
 	}
 }

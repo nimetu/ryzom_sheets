@@ -27,13 +27,13 @@ use Nel\Misc\StreamInterface;
 
 class CStaticFX implements StreamInterface {
 	/** @var string */
-	public $Name;
+	public $Name = '';
 
 	/** @var string */
-	public $Bone;
+	public $Bone = '';
 
-	/** @var float[] {x,y,z} */
-	public $Offset;
+	/** @var float[] [x,y,z] */
+	public $Offset = array(0,0,0);
 
 	public function serial(MemStream $s) {
 		$s->serial_string($this->Name);

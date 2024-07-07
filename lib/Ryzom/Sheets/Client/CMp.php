@@ -27,28 +27,28 @@ use Nel\Misc\StreamInterface;
 
 class CMp implements StreamInterface {
 	/** @var int */
-	public $Ecosystem;
+	public $Ecosystem = 0;
 
 	/** @var int */
-	public $MpCategory;
+	public $MpCategory = 0;
 
 	/** @var int */
-	public $HarvestSkill;
+	public $HarvestSkill = 0;
 
 	/** @var int */
-	public $Family;
+	public $Family = 0;
 
 	/** @var int */
-	public $ItemPartBF;
+	public $ItemPartBF = 0;
 
 	/** @var bool */
-	public $UsedAsCraftRequirement;
+	public $UsedAsCraftRequirement = false;
 
 	/** @var int */
-	public $MpColor;
+	public $MpColor = 0;
 
 	/** @var int */
-	public $StatEnergy;
+	public $StatEnergy = 0;
 
 	/**
 	 * @param MemStream $s
@@ -109,7 +109,7 @@ class CMp implements StreamInterface {
 	 *
 	 * @param int $index
 	 *
-	 * @return array
+	 * @return string[]
 	 */
 	public function getMpftStats($index) {
 		$all_stats = 'durability|lightness|sap_load|dmg|speed|range|dodge_modifier|parry_modifier|adversary_dodge_modifier|adversary_parry_modifier|protection_factor|max_slashing_protection|max_smashing_protection|max_piercing_protection'.
@@ -152,7 +152,7 @@ class CMp implements StreamInterface {
 	 *
 	 * @param string $name stat name like 'durability', 'lightness', etc
 	 *
-	 * @return mixed
+	 * @return int|false
 	 */
 	public function getStatIndex($name) {
 		$statNames = array(

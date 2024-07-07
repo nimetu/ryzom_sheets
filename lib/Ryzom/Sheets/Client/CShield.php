@@ -27,7 +27,7 @@ use Nel\Misc\StreamInterface;
 
 class CShield implements StreamInterface {
 	/** @var int */
-	public $ShieldType;
+	public $ShieldType = 0;
 
 	public function serial(MemStream $s) {
 		$s->serial_uint32($this->ShieldType);

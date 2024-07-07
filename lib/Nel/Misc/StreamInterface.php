@@ -24,6 +24,11 @@ namespace Nel\Misc;
 
 interface StreamInterface {
 
+	/**
+	 * @param MemStream $s
+	 *
+	 * @return void
+	 */
 	function serial(MemStream $s);
 }
 

@@ -27,7 +27,7 @@ use Nel\Misc\StreamInterface;
 
 class CContinent implements StreamInterface {
 	/** @var string */
-	public $Name;
+	public $Name = '';
 
 	/** @var CPrimZone */
 	public $Zone;
@@ -36,17 +36,17 @@ class CContinent implements StreamInterface {
 	public $ZoneCenter;
 
 	/** @var CContLandMark[] */
-	public $ContLandMarks;
+	public $ContLandMarks = array();
+
+	public function __construct() {
+		$this->Zone = new CPrimZone();
+		$this->ZoneCenter = new CVector2f();
+	}
 
 	public function serial(MemStream $s) {
 		$s->serial_string($this->Name);
-
-		$this->Zone = new CPrimZone();
 		$this->Zone->serial($s);
-
-		$this->ZoneCenter = new CVector2f();
 		$this->ZoneCenter->serial($s);
-
 		$this->ContLandMarks = array();
 		$s->serial_uint32($nbItems);
 		for ($i = 0; $i < $nbItems; $i++) {

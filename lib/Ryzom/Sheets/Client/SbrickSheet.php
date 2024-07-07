@@ -27,103 +27,107 @@ use Nel\Misc\StreamInterface;
 
 class SbrickSheet implements StreamInterface {
 	/** @var array */
-	public $UsedSkills;
+	public $UsedSkills = array();
 
 	/** @var int */
-	public $BrickFamily;
+	public $BrickFamily = 0;
 
 	/** @var int */
-	public $IndexInFamily;
+	public $IndexInFamily = 0;
 
 	/** @var int */
-	public $Level;
+	public $Level = 0;
 
 	/** @var string */
-	public $sTmp;
+	public $sTmp = '';
 
 	/** @var array */
-	public $Icon;
+	public $Icon = array();
 
 	/** @var int */
-	public $IconColor;
+	public $IconColor = 0;
 
 	/** @var int */
-	public $SabrinaCost;
+	public $SabrinaCost = 0;
 
 	/** @var float */
-	public $SabrinaRelativeCost;
+	public $SabrinaRelativeCost = 0;
 
 	/** @var array */
-	public $MandatoryFamilies;
+	public $MandatoryFamilies = array();
 
 	/** @var array */
-	public $OptionalFamilies;
+	public $OptionalFamilies = array();
 
 	/** @var array */
-	public $ParameterFamilies;
+	public $ParameterFamilies = array();
 
 	/** @var array */
-	public $CreditFamilies;
+	public $CreditFamilies = array();
 
 	/** @var string */
-	public $ForbiddenDef;
+	public $ForbiddenDef = '';
 
 	/** @var string */
-	public $ForbiddenExclude;
+	public $ForbiddenExclude = '';
 
 	/** @var CFaberPlan */
 	public $FaberPlan;
 
-	/** @var stdClass[] stdClass::Text */
-	public $Properties;
+	/** @var \stdClass[] stdClass::Text */
+	public $Properties = array();
 
 	/** @var int */
-	public $MinCastTime;
+	public $MinCastTime = 0;
 
 	/** @var int */
-	public $MaxCastTime;
+	public $MaxCastTime = 0;
 
 	/** @var int */
-	public $MinRange;
+	public $MinRange = 0;
 
 	/** @var int */
-	public $MaxRange;
+	public $MaxRange = 0;
 
 	/** @var int */
-	public $BrickRequiredFlags;
+	public $BrickRequiredFlags = 0;
 
 	/** @var int */
-	public $SPCost;
+	public $SPCost = 0;
 
 	/** @var int */
-	public $ActionNature;
+	public $ActionNature = 0;
 
 	/** @var array SheetId */
-	public $RequiredSkills;
+	public $RequiredSkills = array();
 
 	/** @var array SheetId */
-	public $RequireAllSkills;
+	public $RequireAllSkills = array();
 
 	/** @var array SheetId */
-	public $RequiredBricks;
+	public $RequiredBricks = array();
 
 	/** @var int */
-	public $AvoidCyclic;
+	public $AvoidCyclic = 0;
 
 	/** @var int */
-	public $UsableWithEmptyHands;
+	public $UsableWithEmptyHands = 0;
 
 	/** @var int */
-	public $CivRestriction;
+	public $CivRestriction = 0;
 
 	/** @var int */
-	public $FactionIndex;
+	public $FactionIndex = 0;
 
 	/** @var int */
-	public $MinFameValue;
+	public $MinFameValue = 0;
 
 	/** @var int */
-	public $MagicResistType;
+	public $MagicResistType = 0;
+
+	public function __construct() {
+		$this->FaberPlan = new CFaberPlan;
+	}
 
 	public function serial(MemStream $s) {
 		$s->serial_uint32($nbItems);
@@ -149,7 +153,6 @@ class SbrickSheet implements StreamInterface {
 		$s->serial_string($this->ForbiddenDef);
 		$s->serial_string($this->ForbiddenExclude);
 
-		$this->FaberPlan = new CFaberPlan();
 		$this->FaberPlan->serial($s);
 
 		$this->Properties = array();

@@ -11,25 +11,28 @@ class SheetsManager {
 	/** @var PackedSheetsLoader */
 	private $loader;
 
-	/** @var PackedSheets[] */
+	/** @var PackedSheetsCollection[] */
 	private $sheets;
 
-	function __construct(SheetId $sheetId, PackedSheetsLoader $loader) {
+	public function __construct(SheetId $sheetId, PackedSheetsLoader $loader) {
 		$this->sheetId = $sheetId;
 		$this->loader = $loader;
 		$this->sheets = array();
 	}
 
-	function getLoadedSheets() {
+	/**
+	 * @return string[]
+	 */
+	public function getLoadedSheets() {
 		return array_keys($this->sheets);
 	}
 
 	/**
 	 * @param string $sheet 'name.sheet' or just 'sheet'
 	 *
-	 * @return PackedSheets
+	 * @return PackedSheetsCollection
 	 */
-	function load($sheet) {
+	public function load($sheet) {
 		$pos = strrpos($sheet, '.');
 		if ($pos !== false) {
 			$sheet = substr($sheet, $pos + 1);
@@ -41,15 +44,19 @@ class SheetsManager {
 		return $this->sheets[$sheet];
 	}
 
-	function findById($id) {
+	/**
+	 * @param int $id
+	 *
+	 * @return mixed
+	 */
+	public function findById($id) {
 		// get sheet name where $id belongs to
 		$key = $this->sheetId->getSheetIdName($id);
 
 		// load PackedSheet file
 		$ps = $this->load($key);
-		if (!empty($ps)) {
-			// return sheet record
-			return $ps->get($id);
-		}
+
+		// return sheet record
+		return $ps->get($id);
 	}
 }

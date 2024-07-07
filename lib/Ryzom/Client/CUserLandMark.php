@@ -23,26 +23,24 @@
 namespace Ryzom\Client;
 
 use Nel\Misc\MemStream;
+use Nel\Misc\StreamInterface;
 use Ryzom\Sheets\Client\CVector2f;
 
-/**
- * Class Landmark
- */
-class CUserLandMark {
+class CUserLandMark implements StreamInterface {
 	/** @var CVector2f */
 	public $Pos;
 
 	/** @var string */
-	public $Title;
+	public $Title = '';
 
 	/** @var int */
-	public $Type;
+	public $Type = 0;
 
-	/**
-	 * @param MemStream $s
-	 */
+	public function __construct() {
+		$this->Pos = new CVector2f;
+	}
+
 	public function serial(MemStream $s) {
-		$this->Pos = new CVector2f();
 		$this->Pos->serial($s);
 		$s->serial_ucstring($this->Title);
 		$s->serial_byte($this->Type);

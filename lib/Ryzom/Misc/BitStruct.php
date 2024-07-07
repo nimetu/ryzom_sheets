@@ -31,16 +31,16 @@ class BitStruct {
 	protected $structure;
 
 	/** @var array */
-	protected $values;
+	protected $values = array();
 
 	/** @var int */
-	protected $totalBits;
+	protected $totalBits = 0;
 
-	/** @val bool */
-	protected $useBitOps;
+	/** @var bool */
+	protected $useBitOps = false;
 
-	/** @var mixed */
-	protected $realValue;
+	/** @var false|int|string */
+	protected $realValue = 0;
 
 	/**
 	 * Create new bitfield structure
@@ -52,9 +52,7 @@ class BitStruct {
 	 */
 	public function __construct(array $structure) {
 		$this->structure = $structure;
-		$this->realValue = 0;
 
-		$this->totalBits = 0;
 		foreach ($this->structure as $key => $bits) {
 			$this->totalBits += $bits;
 			$this->values[$key] = 0;
@@ -77,24 +75,23 @@ class BitStruct {
 	 * If value string starts with '0x', then decode it as hex
 	 *
 	 * @param string|int $value
+	 *
+	 * @return void
 	 */
 	public function setValue($value) {
-		if (substr($value, 0, 2) == '0x') {
+		if (is_string($value) && substr($value, 0, 2) == '0x') {
 			$value = $this->hex2dec($value);
 		}
 
-		// see if value is small enough to use bitwise ops
-		if (is_int($value)) {
-			$useBitOps = true;
-		} else {
-			$useBitOps = false;
-		}
+		// can use bitwise if given value is already int
+		$isInt = is_int($value);
 		$this->realValue = $value;
+		$isZero = $value === '0' || $value === 0;
 
 		foreach ($this->structure as $key => $bits) {
-			if ($value == 0) {
+			if ($isZero) {
 				$val = 0;
-			} elseif ($useBitOps) {
+			} elseif ($isInt) {
 				// we need value for first N bits
 				$mask = (1 << $bits) - 1;
 				$val = $value & $mask;
@@ -104,9 +101,11 @@ class BitStruct {
 				$value = $value >> $bits;
 			} else {
 				// we need value for first N bits
-				$pow = bcpow(2, $bits);
+				$pow = bcpow('2', $bits);
 				$val = bcmod($value, $pow);
+
 				// remove processed bits from value
+				/** @var numeric-string $value psalm does not detect 'int|string' as numeric-string in here */
 				$value = bcdiv($value, $pow);
 			}
 
@@ -132,7 +131,7 @@ class BitStruct {
 	 *
 	 * @param bool $recalculate
 	 *
-	 * @return mixed
+	 * @return int|string
 	 */
 	public function getValue($recalculate = false) {
 		if (!$recalculate && $this->realValue !== false) {
@@ -140,16 +139,17 @@ class BitStruct {
 		}
 
 		$first = true;
-		$this->realValue = 0;
+		$intValue = 0;
+		$strValue = '0';
 		// process last fields first
 		foreach (array_reverse($this->structure) as $key => $bits) {
 			// if this is second value, then make some room
 			if (!$first) {
 				if ($this->useBitOps) {
-					$this->realValue = $this->realValue << $bits;
+					$intValue = $intValue << $bits;
 				} else {
-					$pow = bcpow(2, $bits);
-					$this->realValue = bcmul($this->realValue, $pow);
+					$pow = bcpow('2', $bits);
+					$strValue = bcmul($strValue, $pow);
 				}
 			}
 			$first = false;
@@ -161,14 +161,15 @@ class BitStruct {
 				$mask = (1 << $bits) - 1;
 				$value = $value & $mask;
 				// val << bits
-				$this->realValue += $value;
+				$intValue += $value;
 			} else {
 				// val & mask
-				$pow = bcpow(2, $bits);
+				$pow = bcpow('2', $bits);
 				$value = bcmod($value, $pow);
-				$this->realValue = bcadd($this->realValue, $value);
+				$strValue = bcadd($strValue, $value);
 			}
 		}
+		$this->realValue = $this->useBitOps ? $intValue : $strValue;
 
 		return $this->realValue;
 	}
@@ -206,16 +207,18 @@ class BitStruct {
 	 *
 	 * Resulting string will contain even number of chars.
 	 *
-	 * @param string $dec
+	 * @param int|string $val
 	 *
 	 * @return string
 	 */
 	protected function dec2hex($val) {
 		$result = '';
 		do {
-			$mod = bcmod($val, 16);
-			$result = dechex($mod).$result;
-			$val = bcdiv(bcsub($val, $mod), 16);
+			/** @var numeric-string $val psalm does not detect 'int|string' as numeric-string in here */
+			$mod = bcmod($val, '16');
+			$val = bcdiv(bcsub($val, $mod), '16');
+
+			$result = dechex((int)$mod).$result;
 		} while ($val !== '0');
 
 		if (strlen($result) % 2 !== 0) {
@@ -244,9 +247,9 @@ class BitStruct {
 			$hex = substr($val, -2);
 			$val = substr($val, 0, -2);
 
-			$byte = hexdec($hex);
+			$byte = (string)hexdec($hex);
+			$byte = bcmul($byte, bcpow('256', (string)$index));
 
-			$byte = bcmul($byte, bcpow(256, $index));
 			$index++;
 
 			$result = bcadd($result, $byte);

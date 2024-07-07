@@ -27,28 +27,37 @@ use Nel\Misc\StreamInterface;
 
 class RaceStatsSheet implements StreamInterface {
 	/** @var int[] */
-	public $CharacStartValue;
+	public $CharacStartValue = array();
 
-	/** @var stdClass */
-	public $GenderInfos;
-
-	/** var int */
-	public $People;
+	/** @var \stdClass[] */
+	public $GenderInfos = array();
 
 	/** @var int */
-	public $Skin;
+	public $People = 0;
+
+	/** @var int */
+	public $Skin = 0;
 
 	/** @var string */
-	public $Automaton;
+	public $Automaton = '';
 
-	/** @var stdClass */
+	/** @var \stdClass */
 	public $BodyToBone;
 
 	/** @var string[] */
-	public $AttackLists;
+	public $AttackLists = array();
+
+	public function __construct() {
+		$this->BodyToBone = new \stdClass;
+	}
 
 	public function serial(MemStream $s) {
-		// CGenderInfo
+		/**
+		 * CGenderInfo
+		 *
+		 * @psalm-suppress MissingClosureReturnType
+		 * @psalm-suppress MissingClosureParamType
+		 */
 		$gi = function(&$var) use($s) {
 			$var     = new \stdClass();
 			$nbItems = 7;
@@ -76,6 +85,7 @@ class RaceStatsSheet implements StreamInterface {
 		};
 
 		$s->serial_byte($this->CharacStartValue, 8);
+		// TODO: Create own class for GenerInfos
 		$gi($this->GenderInfos[0]);
 		$gi($this->GenderInfos[1]);
 		$s->serial_byte($this->People);
@@ -98,4 +108,3 @@ class RaceStatsSheet implements StreamInterface {
 		$s->serial_int_string($this->AttackLists, $nbItems);
 	}
 }
-

@@ -27,10 +27,10 @@ use Nel\Misc\StreamInterface;
 
 class CItemPartMps implements StreamInterface {
 	/** @var int */
-	public $FaberTypeFilter;
+	public $FaberTypeFilter = 0;
 
 	/** @var int */
-	public $Quantity;
+	public $Quantity = 0;
 
 	public function serial(MemStream $s) {
 		$s->serial_uint32($this->FaberTypeFilter);

@@ -25,17 +25,15 @@ namespace Ryzom\Sheets\Client;
 use Nel\Misc\MemStream;
 use Nel\Misc\StreamInterface;
 
-/**
- */
 class CConsumable implements StreamInterface {
 	/** @var int */
-	public $OverdoseTimer;
+	public $OverdoseTimer = 0;
 
 	/** @var int */
-	public $ConsumptionTime;
+	public $ConsumptionTime = 0;
 
 	/** @var string[] */
-	public $Properties;
+	public $Properties = array();
 
 	public function serial(MemStream $s) {
 		$s->serial_short($this->OverdoseTimer);
@@ -45,4 +43,3 @@ class CConsumable implements StreamInterface {
 		$s->serial_int_string($this->Properties, $nbItems);
 	}
 }
-

@@ -78,18 +78,19 @@ class VisualSlotManager implements StreamInterface {
 	/**
 	 * Parse 'visual_slot.tab' file and build map entries
 	 *
-	 * @param MemStream $f
+	 * @param MemStream $s
 	 *
+	 * @return void
 	 * @throws \RuntimeException
 	 */
-	public function serial(MemStream $f) {
-		$f->serial_uint32($nbSlots);
+	public function serial(MemStream $s) {
+		$s->serial_uint32($nbSlots);
 		for ($slot = 0; $slot < $nbSlots; $slot++) {
-			$f->serial_uint32($nbEntries);
+			$s->serial_uint32($nbEntries);
 
 			for ($i = 0; $i < $nbEntries; $i++) {
-				$f->serial_uint32($index);
-				$f->serial_uint32($sheet);
+				$s->serial_uint32($index);
+				$s->serial_uint32($sheet);
 
 				// sanity check
 				if (isset($this->indexMap[$slot][$index])) {
@@ -109,9 +110,10 @@ class VisualSlotManager implements StreamInterface {
 	 * Load 'visual_slot.tab' from string
 	 *
 	 * @param string $data
+	 *
+	 * @return void
 	 */
 	public function load($data) {
 		$this->serial(new MemStream($data));
 	}
-
 }

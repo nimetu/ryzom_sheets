@@ -27,158 +27,159 @@ use Nel\Misc\StreamInterface;
 use Ryzom\Common\EItemFamily;
 
 class ItemSheet implements StreamInterface {
-	/** @var int */
-	public $Id;
+	/** @var string */
+	public $MaleShape = '';
 
 	/** @var string */
-	public $MaleShape;
+	public $FemaleShape = '';
 
 	/** @var string */
-	public $FemaleShape;
+	public $ShapeFyros = '';
 
 	/** @var string */
-	public $ShapeFyros;
+	public $ShapeFyrosFemale = '';
 
 	/** @var string */
-	public $ShapeFyrosFemale;
+	public $ShapeMatis = '';
 
 	/** @var string */
-	public $ShapeMatis;
+	public $ShapeMatisFemale = '';
 
 	/** @var string */
-	public $ShapeMatisFemale;
+	public $ShapeTryker = '';
 
 	/** @var string */
-	public $ShapeTryker;
+	public $ShapeTrykerFemale = '';
 
 	/** @var string */
-	public $ShapeTrykerFemale;
+	public $ShapeZorai = '';
 
 	/** @var string */
-	public $ShapeZorai;
-
-	/** @var string */
-	public $ShapeZoraiFemale;
+	public $ShapeZoraiFemale = '';
 
 	/** @var int */
-	public $SlotBF;
+	public $SlotBF = 0;
 
 	/** @var int */
-	public $MapVariant;
+	public $MapVariant = 0;
 
 	/** @var int */
-	public $Family;
+	public $Family = 0;
 
 	/** @var int */
-	public $ItemType;
+	public $ItemType = 0;
 
 	/** @var string[] */
-	public $Icon;
+	public $Icon = array();
 
 	/** @var int[] */
-	public $IconColor;
+	public $IconColor = array();
 
 	/** @var string*/
-	public $IconText;
+	public $IconText = '';
 
 	/** @var string */
-	public $AnimSet;
+	public $AnimSet = '';
 
 	/** @var int */
-	public $Color;
+	public $Color = 0;
 
 	/** @var bool */
-	public $HasFx;
+	public $HasFx = false;
 
 	/** @var bool */
-	public $DropOrSell;
+	public $DropOrSell = false;
 
 	/** @var bool */
-	public $IsItemNoRent;
+	public $IsItemNoRent = false;
 
 	/** @var bool */
-	public $NeverHideWhenEquiped;
+	public $NeverHideWhenEquiped = false;
 
 	/** @var int */
-	public $Stackable;
+	public $Stackable = 0;
 
 	/** @var bool */
-	public $IsConsumable;
+	public $IsConsumable = false;
 
 	/** @var float */
-	public $Bulk;
+	public $Bulk = 0;
 
 	/** @var int */
-	public $EquipTime;
+	public $EquipTime = 0;
 
 	/** @var CFX */
 	public $FX;
 
 	/** @var CStaticFX[] */
-	public $StaticFXs;
+	public $StaticFXs = array();
 
 	/** @var string[] */
-	public $Effect;
+	public $Effect = array();
 
 	/** @var CMpItemPart[] */
-	public $MpItemParts;
+	public $MpItemParts = array();
 
 	/** @var int */
-	public $CraftPlan;
+	public $CraftPlan = 0;
 
 	/** @var int */
-	public $RequiredCharac;
+	public $RequiredCharac = 0;
 
 	/** @var int */
-	public $RequiredCharacLevel;
+	public $RequiredCharacLevel = 0;
 
 	/** @var int */
-	public $RequiredSkill;
+	public $RequiredSkill = 0;
 
 	/** @var int */
-	public $RequiredSkillLevel;
+	public $RequiredSkillLevel = 0;
 
 	/** @var int */
-	public $ItemOrigin;
+	public $ItemOrigin = 0;
 
-	/** @var CArmor */
-	public $Armor;
+	/** @var CArmor|null */
+	public $Armor = null;
 
-	/** @var CMeleeWeapon */
-	public $MeleeWeapon;
+	/** @var CMeleeWeapon|null */
+	public $MeleeWeapon = null;
 
-	/** @var CRangeWeapon */
-	public $RangeWeapon;
+	/** @var CRangeWeapon|null */
+	public $RangeWeapon = null;
 
-	/** @var CAmmo */
-	public $Ammo;
+	/** @var CAmmo|null */
+	public $Ammo = null;
 
-	/** @var CMp */
-	public $Mp;
+	/** @var CMp|null */
+	public $Mp = null;
 
-	/** @var CShield */
-	public $Shield;
+	/** @var CShield|null */
+	public $Shield = null;
 
-	/** @var CTool */
-	public $Tool;
+	/** @var CTool|null */
+	public $Tool = null;
 
-	/** @var CTeleport */
-	public $Teleport;
+	/** @var CTeleport|null */
+	public $Teleport = null;
 
-	/** @var CPet */
-	public $Pet;
+	/** @var CPet|null */
+	public $Pet = null;
 
-	/** @var CGuildOption */
-	public $GuildOption;
+	/** @var CGuildOption|null */
+	public $GuildOption = null;
 
-	/** @var CCosmetic */
-	public $Cosmetic;
+	/** @var CCosmetic|null */
+	public $Cosmetic = null;
 
-	/** @var CConsumable */
-	public $Consumable;
+	/** @var CConsumable|null */
+	public $Consumable = null;
 
-	/** @var CScroll */
-	public $Scroll;
+	/** @var CScroll|null */
+	public $Scroll = null;
+
+	public function __construct() {
+		$this->FX = new CFX();
+	}
 
 	/**
 	 * @param MemStream $s
@@ -215,7 +216,6 @@ class ItemSheet implements StreamInterface {
 		$s->serial_float($this->Bulk);
 		$s->serial_uint32($this->EquipTime);
 
-		$this->FX = new CFX();
 		$this->FX->serial($s);
 
 		$nbItems = 0;
@@ -365,15 +365,15 @@ class ItemSheet implements StreamInterface {
 
 		$txt = strtolower($this->IconText);
 		if (in_array($txt, $namesArray['foraged'])) {
-			if ($this->Mp->Family == 774) {
+			if ($this->Mp && $this->Mp->Family === 774) {
 				// Supreme Kitin Sting, probably new type of mat that can be looted like kitin larva
 				return -1;
 			} else {
 				return 0;
 			}
-		} else if (in_array($txt, $namesArray['looted'])) {
+		} elseif (in_array($txt, $namesArray['looted'])) {
 			return 1;
-		} else if ($txt == '' || in_array($txt, $namesArray['unknown'])) {
+		} elseif ($txt == '' || in_array($txt, $namesArray['unknown'])) {
 			return -2;
 		} else {
 			return -1;

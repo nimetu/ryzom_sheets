@@ -27,22 +27,22 @@ use Nel\Misc\StreamInterface;
 
 class SContLoc implements StreamInterface {
 	/** @var string */
-	public $SelectionName;
+	public $SelectionName = '';
 
 	/** @var string */
-	public $ContinentName;
+	public $ContinentName = '';
 
 	/** @var float */
-	public $MinX;
+	public $MinX = 0;
 
 	/** @var float */
-	public $MinY;
+	public $MinY = 0;
 
 	/** @var float */
-	public $MaxX;
+	public $MaxX = 0;
 
 	/** @var float */
-	public $MaxY;
+	public $MaxY = 0;
 
 	public function serial(MemStream $s) {
 		$s->serial_string($this->SelectionName);

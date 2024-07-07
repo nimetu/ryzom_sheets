@@ -22,6 +22,18 @@
 
 namespace Ryzom\Sheets;
 
+use Ryzom\Sheets\Client\CharacterSheet;
+use Ryzom\Sheets\Client\FactionSheet;
+use Ryzom\Sheets\Client\ItemSheet;
+use Ryzom\Sheets\Client\OutpostBuildingSheet;
+use Ryzom\Sheets\Client\OutpostSheet;
+use Ryzom\Sheets\Client\OutpostSquadSheet;
+use Ryzom\Sheets\Client\RaceStatsSheet;
+use Ryzom\Sheets\Client\SbrickSheet;
+use Ryzom\Sheets\Client\SkilltreeSheet;
+use Ryzom\Sheets\Client\SphraseSheet;
+use Ryzom\Sheets\Client\WorldSheet;
+
 /**
  * Entity types for packed sheets files
  * as described in Ryzom Core sources
@@ -76,42 +88,43 @@ class EntityType {
 	 *
 	 * @param int $entityType
 	 *
-	 * @return \Nel\Misc\StreamInterface
+	 * @return CharacterSheet|FactionSheet|ItemSheet|OutpostBuildingSheet|OutpostSheet|OutpostSquadSheet|RaceStatsSheet|SbrickSheet|SkilltreeSheet|SphraseSheet|WorldSheet
+	 *
 	 * @throws \RuntimeException when $entytyType is unknown
 	 */
 	static function factory($entityType) {
 		switch ($entityType) {
 			//case self::TYPE_CHAR:
-			//	return new Client\PlayerSheet();
+			//	return new PlayerSheet();
 		case self::TYPE_FAUNA:
-			return new Client\CharacterSheet();
+			return new CharacterSheet();
 			//case self::TYPE_FLORA:
-			//	return new Client\FloraSheet();
+			//	return new FloraSheet();
 			//case self::TYPE_OBJECT,
 			//case self::TYPE_FX,
 			//case self::TYPE_BUILDING,
 		case self::TYPE_ITEM:
-			return new Client\ItemSheet();
+			return new ItemSheet();
 			//case self::TYPE_PLANT,
 			//case self::TYPE_MISSION,
 		case self::TYPE_RACE_STATS:
-			return new Client\RaceStatsSheet();
+			return new RaceStatsSheet();
 			//case self::TYPE_PACT,
 			//case self::TYPE_LIGHT_CYCLE,
 			//case self::TYPE_WEATHER_SETUP,
 			//case self::TYPE_CONTINENT,
 		case self::TYPE_WORLD:
-			return new Client\WorldSheet();
+			return new WorldSheet();
 			//case self::TYPE_WEATHER_FUNCTION_PARAMS,
 			//case self::TYPE_UNKNOWN,
 			//case self::TYPE_BOTCHAT,
 			//case self::TYPE_MISSION_ICON,
 		case self::TYPE_SBRICK:
-			return new Client\SbrickSheet();
+			return new SbrickSheet();
 		case self::TYPE_SPHRASE:
-			return new Client\SphraseSheet();
+			return new SphraseSheet();
 		case self::TYPE_SKILLS_TREE:
-			return new Client\SkilltreeSheet();
+			return new SkilltreeSheet();
 			//case self::TYPE_UNBLOCK_TITLES,
 			//case self::TYPE_SUCCESS_TABLE,
 			//case self::TYPE_AUTOMATON_LIST,
@@ -129,16 +142,15 @@ class EntityType {
 			//case self::TYPE_SKY,
 			//case self::TYPE_TEXT_EMOT,
 		case self::TYPE_OUTPOST:
-			return new Client\OutpostSheet();
+			return new OutpostSheet();
 		case self::TYPE_OUTPOST_SQUAD:
-			return new Client\OutpostSquadSheet();
+			return new OutpostSquadSheet();
 		case self::TYPE_OUTPOST_BUILDING:
-			return new Client\OutpostBuildingSheet();
+			return new OutpostBuildingSheet();
 		case self::TYPE_FACTION:
-			return new Client\FactionSheet();
+			return new FactionSheet();
 		default:
 			throw new \RuntimeException("Unsupported entity type ($entityType)");
 		}
 	}
 }
-

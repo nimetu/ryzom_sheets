@@ -27,16 +27,16 @@ use Nel\Misc\StreamInterface;
 
 class CTool implements StreamInterface {
 	/** @var int */
-	public $Skill;
+	public $Skill = 0;
 
 	/** @var int */
-	public $CraftingToolType;
+	public $CraftingToolType = 0;
 
 	/** @var int */
-	public $CommandRange;
+	public $CommandRange = 0;
 
 	/** @var int */
-	public $MaxDonkey;
+	public $MaxDonkey = 0;
 
 	public function serial(MemStream $s) {
 		$s->serial_uint32($this->Skill);

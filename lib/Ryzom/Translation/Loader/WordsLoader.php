@@ -26,7 +26,11 @@ use Ryzom\Translation\UnicodeConverter;
 
 class WordsLoader extends UnicodeConverter implements LoaderInterface {
 
-	// sheet extensions that gets added to key column
+	/**
+	 * sheet extensions that gets added to key column
+	 *
+	 * @var array<string,string[]>
+	 */
 	private $keyExtension = array(
 		'skill' => array('skill ID', ''),
 		'faction' => array('faction', ''),
@@ -45,14 +49,29 @@ class WordsLoader extends UnicodeConverter implements LoaderInterface {
 		'characteristic' => array('characteristic_ID', ''),
 	);
 
+	/**
+	 * @param string $ext
+	 * @param string[] $array
+	 *
+	 * @return void
+	 */
 	function addCustomExt($ext, $array) {
 		$this->keyExtension[$ext] = $array;
 	}
 
+	/**
+	 * @return string[]
+	 */
 	function getSheets() {
 		return array_keys($this->keyExtension);
 	}
 
+	/**
+	 * @param string $sheet
+	 * @param string $data
+	 *
+	 * @return array<string, array<string, string[]>>
+	 */
 	function load($sheet, $data) {
 		if (!isset($this->keyExtension[$sheet])) {
 			throw new \RuntimeException("Unknown translation sheet [$sheet]");
@@ -66,7 +85,7 @@ class WordsLoader extends UnicodeConverter implements LoaderInterface {
 		$header = explode("\t", $rows[0]);
 		// remove last empty columns (if any)
 		foreach(array_reverse(array_keys($header)) as $k) {
-			if (!empty($header[$k])) {
+			if ($header[$k] !== '') {
 				break;
 			}
 			unset($header[$k]);
@@ -76,14 +95,14 @@ class WordsLoader extends UnicodeConverter implements LoaderInterface {
 		for ($i = 1, $len = count($rows); $i < $len; $i++) {
 			// split column, may create more columns than header has
 			$cols = explode("\t", $rows[$i]);
-			if (empty($cols[0])) {
+			if ($cols[0] === '') {
 				continue;
 			}
 
 			$keyIndex = array_search($this->keyExtension[$sheet][0], $header, true);
 
 			// add missing sheet info to id
-			if (!empty($this->keyExtension[$sheet][1])) {
+			if (isset($this->keyExtension[$sheet][1]) && $this->keyExtension[$sheet][1] !== '') {
 				if ($keyIndex !== false) {
 					$cols[$keyIndex] .= $this->keyExtension[$sheet][1];
 				}

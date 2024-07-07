@@ -37,7 +37,9 @@ interface LoaderInterface {
 	 * @param string $sheet sheet name from file
 	 * @param string $data content of words txt file
 	 *
-	 * @throw RuntimeException when $sheet is not supported
+	 * @return array
+	 *
+	 * @throws \RuntimeException when $sheet is not supported
 	 */
 	function load($sheet, $data);
 }

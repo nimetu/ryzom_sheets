@@ -27,25 +27,24 @@ use Nel\Misc\StreamInterface;
 
 class OutpostBuildingSheet implements StreamInterface {
 	/** @var int */
-	public $OBType;
+	public $OBType = 0;
 
 	/** @var int */
-	public $CostDapper;
+	public $CostDapper = 0;
 
 	/** @var int */
-	public $CostTime;
+	public $CostTime = 0;
 
 	/** @var int */
-	public $MPLevelOfHighestExtractRate;
+	public $MPLevelOfHighestExtractRate = 0;
 
 	/** @var int[] */
-	public $Mps;
+	public $Mps = array();
 
 	/** @var string[] */
-	public $Icon;
+	public $Icon = array();
 
 	public function serial(MemStream $s) {
-
 		$s->serial_uint32($this->OBType);
 		$s->serial_uint32($this->CostDapper);
 		$s->serial_uint32($this->CostTime);

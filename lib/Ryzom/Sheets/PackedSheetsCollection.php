@@ -30,7 +30,7 @@ interface PackedSheetsCollection {
 	public function getSheets();
 
 	/**
-	 * @param string $id
+	 * @param int $id
 	 *
 	 * @return mixed
 	 */

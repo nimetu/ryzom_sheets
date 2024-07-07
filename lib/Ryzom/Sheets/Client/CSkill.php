@@ -27,22 +27,22 @@ use Nel\Misc\StreamInterface;
 
 class CSkill implements StreamInterface {
 	/** @var int */
-	public $Skill;
+	public $Skill = 0;
 
 	/** @var string */
-	public $SkillCode;
+	public $SkillCode = '';
 
 	/** @var int */
-	public $MaxSkillValue;
+	public $MaxSkillValue = 0;
 
 	/** @var int */
-	public $StageType;
+	public $StageType = 0;
 
 	/** @var int */
-	public $ParentSkill;
+	public $ParentSkill = 0;
 
 	/** @var int[] */
-	public $ChildSkills;
+	public $ChildSkills = array();
 
 	public function serial(MemStream $s) {
 		$s->serial_uint32($this->Skill);

@@ -23,49 +23,52 @@
 namespace Ryzom\Client;
 
 use Nel\Misc\MemStream;
+use Nel\Misc\StreamInterface;
 
-/**
- * Class Icfg
- */
-class Icfg {
-
+class Icfg implements StreamInterface {
 	const ICFG_STREAM_VERSION = 1;
 	const ICFG_HEADER = '_ICU';
 
 	/** @var int */
-	public $Version;
+	public $Version = 0;
 
 	/** @var array */
-	public $FreeTeller;
+	public $FreeTeller = array();
 
 	/** @var int */
-	public $CurrentMode;
+	public $CurrentMode = 0;
 
 	/** @var int */
-	public $LastInGameScreenW;
+	public $LastInGameScreenW = 0;
 
 	/** @var int */
-	public $LastInGameScreenH;
+	public $LastInGameScreenH = 0;
 
 	/** @var IcfgLandmarks */
 	public $Landmarks;
 
 	/** @var array */
-	public $Taskbar;
+	public $Taskbar = array();
 
 	/** @var array */
-	public $Macros;
+	public $Macros = array();
 
 	/** @var array */
-	public $SceneBubbleInfo;
+	public $SceneBubbleInfo = array();
 
-	/** @var CInfoWindowSave */
-	public $InfoWindowSave;
+	/** @var CInfoWindowSave[] */
+	public $InfoWindowSave = array();
+
+	public function __construct() {
+		$this->Landmarks = new IcfgLandmarks;
+	}
 
 	/**
 	 * Load .icfg file
 	 *
 	 * @param string $name
+	 *
+	 * @return void
 	 *
 	 * @throws \RuntimeException
 	 */
@@ -80,9 +83,6 @@ class Icfg {
 		$this->serial($s);
 	}
 
-	/**
-	 * @param MemStream $s
-	 */
 	public function serial(MemStream $s) {
 		if (!$s->isReading()) {
 			throw new \RuntimeException('Writing is not supported');
@@ -126,7 +126,6 @@ class Icfg {
 		}
 
 		// user landmarks
-		$this->Landmarks = new IcfgLandmarks();
 		$this->Landmarks->serial($s);
 
 		if ($this->Version >= 5) {
@@ -156,6 +155,8 @@ class Icfg {
 	 * Data format depends on key
 	 *
 	 * @param MemStream $s
+	 *
+	 * @return void
 	 */
 	protected function serialDatabase(MemStream $s) {
 		if ($this->Version >= 9) {
@@ -180,8 +181,11 @@ class Icfg {
 	 * deprecated, kept for compatibility
 	 *
 	 * @param MemStream $s
+	 *
+	 * @return void
 	 */
 	protected function serialTaskbar(MemStream $s) {
+		/** @var int $ver */
 		$s->serialVersion($ver); // $ver==0
 		$TBM_NUM_BARS = 10;
 		$TBM_NUM_SHORTCUT_PER_BAR = 10;
@@ -208,10 +212,11 @@ class Icfg {
 	/**
 	 * @param MemStream $s
 	 *
-	 * @return bool
+	 * @return bool|null
 	 * @throws \UnexpectedValueException
 	 */
 	protected function serialUserChatsInfos(MemStream $s) {
+		/** @var int $ver */
 		$s->serialVersion($ver);
 
 		$s->serialCheck('CHAT');
@@ -249,15 +254,19 @@ class Icfg {
 	 * Dyn chat channel states
 	 *
 	 * @param MemStream $s
+	 *
+	 * @return void
 	 */
 	protected function serialUserDynChatsInfos(MemStream $s) {
 		// FIXME: info is not kept
+		/** @var int $ver */
 		$s->serialVersion($ver);
 		$s->serialCheck('YGMO');
 		if ($ver >= 1) {
 			$s->serial_byte($present);
 
 			// CFilteredDynChatSummary
+			/** @var int $fdcVersion */
 			$s->serialVersion($fdcVersion);
 			$s->serialCheck('CHSU');
 			if ($fdcVersion >= 0) {
@@ -273,9 +282,12 @@ class Icfg {
 	 * Chat channel tab states
 	 *
 	 * @param MemStream $s
+	 *
+	 * @return void
 	 */
 	protected function serialFilteredChatSummary(MemStream $s) {
 		// FIXME: info is not kept
+		/** @var int $ver */
 		$s->serialVersion($ver);
 		$s->serialCheck('CHSU');
 
@@ -297,8 +309,11 @@ class Icfg {
 	 * Load tell window names
 	 *
 	 * @param MemStream $s
+	 *
+	 * @return void
 	 */
 	protected function serialFreeTeller(MemStream $s) {
+		/** @var int $ver */
 		$this->FreeTeller = array();
 		$s->serialVersion($ver);
 
@@ -316,11 +331,14 @@ class Icfg {
 	 * Read UI window locations
 	 *
 	 * @param MemStream $s
+	 *
+	 * @return void
 	 */
 	protected function serialInfoWindowSave(MemStream $s) {
 		$this->InfoWindowSave = array();
 
-		$s->serialVersion($v);
+		/** @var int $ver */
+		$s->serialVersion($ver);
 
 		$s->serial_uint32($nb);
 		for ($i = 0; $i < $nb; $i++) {
@@ -335,6 +353,8 @@ class Icfg {
 	 * Read macro icons added to taskbar
 	 *
 	 * @param MemStream $s
+	 *
+	 * @return void
 	 */
 	protected function serialMacroMemory(MemStream $s) {
 		$this->Macros = array();
@@ -354,6 +374,8 @@ class Icfg {
 
 	/**
 	 * @param MemStream $s
+	 *
+	 * @return void
 	 */
 	protected function serialInSceneBubbleInfo(MemStream $s) {
 		$this->SceneBubbleInfo = array();
@@ -364,5 +386,4 @@ class Icfg {
 			$this->SceneBubbleInfo[] = $string;
 		}
 	}
-
 }

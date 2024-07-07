@@ -26,21 +26,28 @@ namespace Nel\Misc;
  * MemStream
  */
 class MemStream {
-	protected $isReading;
+	/** @var bool */
+	protected $isReading = false;
 
-	protected $is64bit;
+	/** @var bool */
+	protected $is64bit = false;
 
-	protected $buffer;
-	protected $pos;
-	protected $size;
+	/** @var string */
+	protected $buffer = '';
+
+	/** @var int */
+	protected $pos = 0;
+
+	/** @var int */
+	protected $size = 0;
 
 	/**
 	 * @param string $buffer
 	 */
-	function __construct($buffer = '') {
+	public function __construct($buffer = '') {
 		$this->setBuffer($buffer);
 
-		$this->set64bit(PHP_INT_SIZE == 8);
+		$this->set64bit(PHP_INT_SIZE === 8);
 	}
 
 	/**
@@ -48,17 +55,21 @@ class MemStream {
 	 * then use bcmath() in serial_uint64() method
 	 *
 	 * @param bool $s
+	 *
+	 * @return void
 	 */
-	function set64bit($s) {
-		$this->is64bit = (bool)$s;
+	public function set64bit($s) {
+		$this->is64bit = $s;
 	}
 
 	/**
 	 * Set buffer and reset position counter to start
 	 *
-	 * @param $buf
+	 * @param string $buf
+	 *
+	 * @return void
 	 */
-	function setBuffer($buf) {
+	public function setBuffer($buf) {
 		$this->pos = 0;
 		$this->size = strlen($buf);
 		$this->buffer = $buf;
@@ -70,7 +81,7 @@ class MemStream {
 	 *
 	 * @return mixed
 	 */
-	function getBuffer() {
+	public function getBuffer() {
 		return $this->buffer;
 	}
 
@@ -79,7 +90,7 @@ class MemStream {
 	 *
 	 * @return mixed
 	 */
-	function getSize() {
+	public function getSize() {
 		return $this->size;
 	}
 
@@ -88,11 +99,14 @@ class MemStream {
 	 *
 	 * @return mixed
 	 */
-	function getPos() {
+	public function getPos() {
 		return $this->pos;
 	}
 
-	function isReading() {
+	/**
+	 * @return bool
+	 */
+	public function isReading() {
 		return $this->isReading;
 	}
 
@@ -103,7 +117,7 @@ class MemStream {
 	 *
 	 * @return bool
 	 */
-	function seek($pos) {
+	public function seek($pos) {
 		if ($pos < 0 || $pos > $this->getSize()) {
 			return false;
 		}
@@ -120,7 +134,7 @@ class MemStream {
 	 *
 	 * @return string
 	 */
-	function dump($bytes = 32, $offset = 0) {
+	public function dump($bytes = 32, $offset = 0) {
 		$buf = substr($this->buffer, $this->pos + $offset, $bytes);
 		return self::hexDump($buf);
 	}
@@ -133,7 +147,7 @@ class MemStream {
 	 *
 	 * @return string
 	 */
-	static function hexDump($buf, $long = true) {
+	static public function hexDump($buf, $long = true) {
 		$ret = '';
 
 		if ($long !== true) {
@@ -181,7 +195,7 @@ class MemStream {
 	 * @return int
 	 * @throws \RuntimeException
 	 */
-	function _format_size($format) {
+	private function _format_size($format) {
 		switch ($format[0]) {
 		case 'a':
 		case 'A':
@@ -227,6 +241,8 @@ class MemStream {
 	 * @param string $format - unpack format
 	 * @param int $nb
 	 *
+	 * @return void
+	 *
 	 * @throws \RuntimeException
 	 */
 	private function _read(&$val, $format, $nb = null) {
@@ -254,6 +270,8 @@ class MemStream {
 	 *
 	 * @param mixed $val
 	 * @param string $format
+	 *
+	 * @return void
 	 */
 	private function _write($val, $format) {
 		if (!is_array($val)) {
@@ -272,6 +290,8 @@ class MemStream {
 	 * @param mixed $val - input or output for value
 	 * @param string $format - format
 	 * @param int $nb
+	 *
+	 * @return void
 	 */
 	private function _serial(&$val, $format, $nb = null) {
 		if ($this->isReading) {
@@ -286,8 +306,10 @@ class MemStream {
 	 *
 	 * @param mixed $val
 	 * @param int $nb
+	 *
+	 * @return void
 	 */
-	function serial_byte(&$val, $nb = null) {
+	public function serial_byte(&$val, $nb = null) {
 		$this->_serial($val, 'C', $nb);
 	}
 
@@ -296,32 +318,49 @@ class MemStream {
 	 *
 	 * @param mixed $val
 	 * @param int $nb
+	 *
+	 * @return void
 	 */
-	function serial_sint8(&$val, $nb = null) {
+	public function serial_sint8(&$val, $nb = null) {
 		$this->_serial($val, 'c', $nb);
 	}
 
 	/**
 	 * Read/write 16bit integer
 	 * big-endian, network order
+	 *
+	 * @param mixed $val
+	 * @param int $nb
+	 *
+	 * @return void
 	 */
-	function serial_short_n(&$val, $nb = null) {
+	public function serial_short_n(&$val, $nb = null) {
 		$this->_serial($val, 'n', $nb);
 	}
 
 	/**
 	 * Read/write 16bit integer
 	 * little-endian, intel's order
+	 *
+	 * @param mixed $val
+	 * @param int $nb
+	 *
+	 * @return void
 	 */
-	function serial_short(&$val, $nb = null) {
+	public function serial_short(&$val, $nb = null) {
 		$this->_serial($val, 'v', $nb);
 	}
 
 	/**
 	 * Read/write unsigned 64bit integer
 	 * little-endian, intel's order
+	 *
+	 * @param mixed $val
+	 * @param int $nb
+	 *
+	 * @return void
 	 */
-	function serial_uint64(&$val, $nb = null) {
+	public function serial_uint64(&$val, $nb = null) {
 		if ($this->isReading) {
 			if ($nb === null) {
 				$this->serial_uint32($low);
@@ -361,15 +400,24 @@ class MemStream {
 	/**
 	 * Read/write 32bit integer
 	 * big-endian, network order
+	 *
+	 * @param mixed $val
+	 * @param int $nb
+	 *
+	 * @return void
 	 */
-	function serial_uint32_n(&$val, $nb = null) {
+	public function serial_uint32_n(&$val, $nb = null) {
 		$this->_serial($val, 'N', $nb);
 	}
 
 	/**
 	 * Convert signed 32bit int to unsigned 32bit int
+	 *
+	 * @param mixed $val
+	 *
+	 * @return int
 	 */
-	function sint32_to_uint32($val){
+	public function sint32_to_uint32($val){
 		if((float)$val < 0){
 			$val = sprintf('%u', $val);
 		}
@@ -378,8 +426,12 @@ class MemStream {
 
 	/**
 	 * Convert unsigned 32bit int to signed 32bit int
+	 *
+	 * @param mixed $val
+	 *
+	 * @return int
 	 */
-	function uint32_to_sint32($val){
+	public function uint32_to_sint32($val){
 		if ((float)$val > 2147483647) {
 			$val = bcsub($val, '4294967296');
 		}
@@ -389,8 +441,13 @@ class MemStream {
 	/**
 	 * Read/write 32bit integer
 	 * little-endian - intel's order
+	 *
+	 * @param mixed $val
+	 * @param int $nb
+	 *
+	 * @return void
 	 */
-	function serial_uint32(&$val, $nb = null) {
+	public function serial_uint32(&$val, $nb = null) {
 		if ($this->isReading()) {
 			$this->_serial($val, 'V', $nb);
 			// correct sign
@@ -413,14 +470,24 @@ class MemStream {
 	/**
 	 * Read/write 32bit signed int
 	 * machine order
+	 *
+	 * @param mixed $val
+	 * @param int $nb
+	 *
+	 * @return void
 	 */
-	function serial_sint32(&$val, $nb = null) {
+	public function serial_sint32(&$val, $nb = null) {
 		$this->_serial($val, 'l', $nb);
 	}
 
 	/**
 	 * Read/write float
 	 * machine dependent size and representation
+	 *
+	 * @param mixed $val
+	 * @param int $nb
+	 *
+	 * @return void
 	 */
 	function serial_float(&$val, $nb = null) {
 		$this->_serial($val, 'f', $nb);
@@ -428,8 +495,13 @@ class MemStream {
 
 	/**
 	 * Read/write string buffer
+	 *
+	 * @param mixed $val
+	 * @param int $size
+	 *
+	 * @return void
 	 */
-	function serial_buffer(&$val, $size = null) {
+	public function serial_buffer(&$val, $size = null) {
 		if ($this->isReading) {
 			$val = substr($this->buffer, $this->pos, $size);
 		} else {
@@ -437,20 +509,31 @@ class MemStream {
 			$size = strlen($val);
 			$this->size += $size;
 		}
+		/** @psalm-suppress PossiblyNullOperand */
 		$this->pos += $size;
 	}
 
 	/**
 	 * @see serial_int_string
+	 *
+	 * @param mixed $val
+	 * @param int $nb
+	 *
+	 * @return void
 	 */
-	function serial_string(&$val, $nb = null) {
+	public function serial_string(&$val, $nb = null) {
 		$this->serial_int_string($val, $nb);
 	}
 
 	/**
 	 * Serial ucstring (16bit unicode)
+	 *
+	 * @param mixed $val
+	 * @param int $nb
+	 *
+	 * @return void
 	 */
-	function serial_ucstring(&$val, $nb = null) {
+	public function serial_ucstring(&$val, $nb = null) {
 		if ($this->isReading) {
 			if ($nb === null) {
 				$this->serial_uint32($size);
@@ -476,8 +559,13 @@ class MemStream {
 
 	/**
 	 * Read/write string with <int32> length counter
+	 *
+	 * @param mixed $val
+	 * @param int $nb
+	 *
+	 * @return void
 	 */
-	function serial_int_string(&$val, $nb = null) {
+	public function serial_int_string(&$val, $nb = null) {
 		if ($this->isReading) {
 			if ($nb === null) {
 				$this->serial_uint32($size);
@@ -503,8 +591,13 @@ class MemStream {
 
 	/**
 	 * Read/write string with <16bit> length counter
+	 *
+	 * @param mixed $val
+	 * @param int $nb
+	 *
+	 * @return void
 	 */
-	function serial_short_string(&$val, $nb = null) {
+	public function serial_short_string(&$val, $nb = null) {
 		if ($this->isReading) {
 			if ($nb === null) {
 				$this->serial_short($size);
@@ -530,8 +623,13 @@ class MemStream {
 
 	/**
 	 * Read/write string with <8bit> length counter
+	 *
+	 * @param mixed $val
+	 * @param int $nb
+	 *
+	 * @return void
 	 */
-	function serial_byte_string(&$val, $nb = null) {
+	public function serial_byte_string(&$val, $nb = null) {
 		if ($this->isReading) {
 			if ($nb === null) {
 				$this->serial_byte($size);
@@ -557,8 +655,12 @@ class MemStream {
 
 	/**
 	 * Version serializing
+	 *
+	 * @param int $val
+	 *
+	 * @return void
 	 */
-	function serialVersion(&$val) {
+	public function serialVersion(&$val) {
 		if ($this->isReading()) {
 			$this->serial_byte($b);
 			if ($b == 0xFF) {
@@ -584,12 +686,15 @@ class MemStream {
 	 *
 	 * @param string $val
 	 *
+	 * @return void
+	 *
 	 * @throws \UnexpectedValueException
 	 */
-	function serialCheck($val) {
+	public function serialCheck($val) {
 		if ($this->isReading()) {
 			$this->serial_buffer($buf, strlen($val));
 			if ($val !== $buf) {
+				/** @psalm-suppress ForbiddenCode */
 				var_dump($val, $buf);
 				throw new \UnexpectedValueException("Unexpected data from stream, expected ({$val})");
 			}

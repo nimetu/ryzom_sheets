@@ -27,7 +27,7 @@ use Nel\Misc\StreamInterface;
 
 class CTeleport implements StreamInterface {
 	/** @var int */
-	public $Type;
+	public $Type = 0;
 
 	public function serial(MemStream $s) {
 		$s->serial_uint32($this->Type);

@@ -28,7 +28,7 @@ use Nel\Misc\MemStream;
  * Factory class to load .packed_sheets and lmconts.packed files
  */
 class PackedSheetsLoader {
-	/** string */
+	/** @var string */
 	private $path;
 
 	/**
@@ -42,7 +42,8 @@ class PackedSheetsLoader {
 	 * @param string $type
 	 *
 	 * @throws \RuntimeException
-	 * @return PackedSheetsCollection
+	 *
+	 * @return ContinentLandmarks|PackedSheets
 	 */
 	public function load($type) {
 		if ($type == 'lmconts') {
@@ -66,5 +67,4 @@ class PackedSheetsLoader {
 
 		return $ps;
 	}
-
 }

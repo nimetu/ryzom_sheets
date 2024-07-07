@@ -25,20 +25,18 @@ namespace Ryzom\Sheets\Client;
 use Nel\Misc\MemStream;
 use Nel\Misc\StreamInterface;
 
-/**
- */
 class CScroll implements StreamInterface {
 	/** @var string */
-	public $Texture;
+	public $Texture = '';
 
 	/** @var string */
-	public $LuaCommand;
+	public $LuaCommand = '';
 
 	/** @var string */
-	public $WebCommand;
+	public $WebCommand = '';
 
 	/** @var string */
-	public $Label;
+	public $Label = '';
 
 	public function serial(MemStream $s) {
 		$s->serial_string($this->Texture);

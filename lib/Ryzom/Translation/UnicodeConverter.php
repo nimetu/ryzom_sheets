@@ -35,7 +35,7 @@ class UnicodeConverter {
 		if (($data[0] == "\xFE" && $data[1] == "\xFF") || ($data[0] == "\xFF" && $data[1] == "\xFE")) {
 			// UTF-16 (LE or BE)
 			$data = iconv('UTF-16', 'UTF-8', $data);
-		} else if ($data[0] == "\xEF" && $data[1] == "\xBB" && $data[2] == "\xBF") {
+		} elseif ($data[0] == "\xEF" && $data[1] == "\xBB" && $data[2] == "\xBF") {
 			// remove UTF-8 BOM
 			$data = substr($data, 3);
 		}

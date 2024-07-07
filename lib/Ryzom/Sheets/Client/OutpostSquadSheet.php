@@ -27,10 +27,9 @@ use Nel\Misc\StreamInterface;
 
 class OutpostSquadSheet implements StreamInterface {
 	/** @var int */
-	public $BuyPrice;
+	public $BuyPrice = 0;
 
 	public function serial(MemStream $s) {
 		$s->serial_uint32($this->BuyPrice);
 	}
 }
-

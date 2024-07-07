@@ -68,4 +68,3 @@ class EItemFamily {
 	const COMMAND_TICKET = 39;
 	const GENERIC_ITEM = 40;
 }
-

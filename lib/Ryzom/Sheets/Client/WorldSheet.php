@@ -27,14 +27,20 @@ use Nel\Misc\StreamInterface;
 
 class WorldSheet implements StreamInterface {
 	/** @var string */
-	public $Name;
+	public $Name = '';
 
 	/** @var SContLoc[] */
-	public $ContLocs;
+	public $ContLocs = array();
 
-	/** @var Smap[] */
-	public $Maps;
+	/** @var SMap[] */
+	public $Maps = array();
 
+	/**
+	 * @param MemStream $s
+	 *
+	 * @return void
+	 * @throws \RuntimeException if there is duplicate SMap::Name maps
+	 */
 	public function serial(MemStream $s) {
 		$s->serial_string($this->Name);
 
@@ -53,7 +59,27 @@ class WorldSheet implements StreamInterface {
 			$map = new SMap();
 			$map->serial($s);
 
-			$this->Maps[] = $map;
+			$key = strtolower($map->Name);
+			if (isset($this->Maps[$key])) {
+				throw new \RuntimeException("Duplicate SMap::Name ({$map->Name})");
+			}
+			$this->Maps[$key] = $map;
 		}
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public function getSheets() {
+		return $this->Maps;
+	}
+
+	/**
+	 * @param int $id
+	 *
+	 * @return mixed
+	 */
+	public function get($id) {
+		return $this->Maps[$id];
 	}
 }

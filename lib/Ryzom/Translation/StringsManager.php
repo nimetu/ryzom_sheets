@@ -38,6 +38,11 @@ class StringsManager {
 		$this->loaders = array();
 	}
 
+	/**
+	 * @param LoaderInterface $loader
+	 *
+	 * @return void
+	 */
 	function register(LoaderInterface $loader) {
 		$files = $loader->getSheets();
 		foreach ($files as $file) {
@@ -45,6 +50,13 @@ class StringsManager {
 		}
 	}
 
+	/**
+	 * @param string $file
+	 * @param string $data
+	 * @param string $lang
+	 *
+	 * @return void
+	 */
 	function load($file, $data, $lang) {
 		if (!isset($this->loaders[$file])) {
 			throw new \RuntimeException("Loader for file [$file] is not registered");
@@ -76,5 +88,4 @@ class StringsManager {
 			}
 		}
 	}
-
 }

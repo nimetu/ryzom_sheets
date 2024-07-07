@@ -23,21 +23,16 @@
 namespace Ryzom\Client;
 
 use Nel\Misc\MemStream;
+use Nel\Misc\StreamInterface;
 
-/**
- * Class IcfgLandmarks
- */
-class IcfgLandmarks {
+class IcfgLandmarks implements StreamInterface {
 
 	/** @var int */
-	public $version;
+	public $version = 0;
 
-	/** @var  CUserLandMark[] */
-	public $Continents;
+	/** @var array<string,CUserLandMark[]> */
+	public $Continents = array();
 
-	/**
-	 * @param MemStream $s
-	 */
 	public function serial(MemStream $s) {
 		$s->serial_sint8($this->version);
 
@@ -52,6 +47,8 @@ class IcfgLandmarks {
 	 * Read user landmarks
 	 *
 	 * @param MemStream $s
+	 *
+	 * @return void
 	 */
 	protected function serialContinent(MemStream $s) {
 		$s->serial_string($name);

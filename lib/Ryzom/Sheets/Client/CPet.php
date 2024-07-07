@@ -26,9 +26,8 @@ use Nel\Misc\MemStream;
 use Nel\Misc\StreamInterface;
 
 class CPet implements StreamInterface {
-
 	/** @var int */
-	public $Slot;
+	public $Slot = 0;
 
 	public function serial(MemStream $s) {
 		$s->serial_uint32($this->Slot);

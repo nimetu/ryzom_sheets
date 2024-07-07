@@ -26,15 +26,14 @@ use Nel\Misc\MemStream;
 use Nel\Misc\StreamInterface;
 
 class CAmmo implements StreamInterface {
+	/** @var int */
+	public $Skill = 0;
 
 	/** @var int */
-	public $Skill;
+	public $DamageType = 0;
 
 	/** @var int */
-	public $DamageType;
-
-	/** @var int */
-	public $Magazine;
+	public $Magazine = 0;
 
 	public function serial(MemStream $s) {
 		$s->serial_uint32($this->Skill);
@@ -42,4 +41,3 @@ class CAmmo implements StreamInterface {
 		$s->serial_uint32($this->Magazine);
 	}
 }
-

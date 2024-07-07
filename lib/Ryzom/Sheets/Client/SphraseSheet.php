@@ -27,16 +27,16 @@ use Nel\Misc\StreamInterface;
 
 class SphraseSheet implements StreamInterface {
 	/** @var int SheetId */
-	public $Bricks;
+	public $Bricks = 0;
 
 	/** @var bool */
-	public $Castable;
+	public $Castable = false;
 
 	/** @var bool */
-	public $ShowInActionProgression;
+	public $ShowInActionProgression = false;
 
 	/** @var bool */
-	public $ShowInAPOnlyIfLearnt;
+	public $ShowInAPOnlyIfLearnt = false;
 
 	public function serial(MemStream $s) {
 		$s->serial_uint32($nbItems);

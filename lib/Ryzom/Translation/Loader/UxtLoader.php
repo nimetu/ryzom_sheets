@@ -26,10 +26,20 @@ use Ryzom\Translation\UnicodeConverter;
 
 class UxtLoader extends UnicodeConverter implements LoaderInterface {
 
+	/**
+	 * @return string[]
+	 */
 	function getSheets() {
 		return array('uxt');
 	}
 
+	/**
+	 * @param string $sheet
+	 * @param string $data
+	 *
+	 * @return array{uxt:array<string,string[]>}
+	 * @throws \RuntimeException if trying to load anything other than 'uxt' format
+	 */
 	function load($sheet, $data) {
 		if ($sheet !== 'uxt') {
 			throw new \RuntimeException('This loader only supportx "uxt" file format');

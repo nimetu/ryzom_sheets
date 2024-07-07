@@ -35,7 +35,7 @@ class CContLandMark implements StreamInterface {
 	const STREET = 6;
 
 	/** @var int */
-	public $Type;
+	public $Type = 0;
 
 	/** @var CVector2f */
 	public $Pos;
@@ -44,19 +44,18 @@ class CContLandMark implements StreamInterface {
 	public $Zone;
 
 	/** @var string */
-	public $TitleText;
+	public $TitleText = '';
+
+	public function __construct() {
+		$this->Pos = new CVector2f();
+		$this->Zone = new CPrimZone;
+	}
 
 	public function serial(MemStream $s) {
 		$s->serial_byte($ver);
-
 		$s->serial_uint32($this->Type);
-
-		$this->Pos = new CVector2f();
 		$this->Pos->serial($s);
-
-		$this->Zone = new CPrimZone();
 		$this->Zone->serial($s);
-
 		$s->serial_string($this->TitleText);
 	}
 }

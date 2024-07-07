@@ -27,10 +27,10 @@ use Nel\Misc\StreamInterface;
 
 class CGuildOption implements StreamInterface {
 	/** @var int */
-	public $MoneyCost;
+	public $MoneyCost = 0;
 
 	/** @var int */
-	public $XpCost;
+	public $XpCost = 0;
 
 	public function serial(MemStream $s) {
 		$s->serial_uint32($this->MoneyCost);

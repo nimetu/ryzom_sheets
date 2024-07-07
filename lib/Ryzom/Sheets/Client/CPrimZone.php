@@ -26,12 +26,11 @@ use Nel\Misc\MemStream;
 use Nel\Misc\StreamInterface;
 
 class CPrimZone implements StreamInterface {
-
 	/** @var int */
-	private $fillerZeros;
+	private $fillerZeros = 0;
 
 	/** @var CPrimVector[] */
-	public $VPoints;
+	public $VPoints = array();
 
 	public function serial(MemStream $s) {
 		// IPrimitive::serial()

@@ -25,17 +25,15 @@ namespace Ryzom\Sheets\Client;
 use Nel\Misc\MemStream;
 use Nel\Misc\StreamInterface;
 
-/**
- */
 class CRangeWeapon implements StreamInterface {
 	/** @var int */
-	public $WeaponType;
+	public $WeaponType = 0;
 
 	/** @var int */
-	public $Skill;
+	public $Skill = 0;
 
 	/** @var int */
-	public $RangeWeaponType;
+	public $RangeWeaponType = 0;
 
 	public function serial(MemStream $s) {
 		$s->serial_uint32($this->WeaponType);

@@ -33,13 +33,23 @@ class PackedSheets implements PackedSheetsCollection, StreamInterface {
 	const HEADER = 'HSKP';
 	const HEADER_VERSION = 5;
 
-	protected $version;
-	protected $compat;
-	protected $dictionnary;
-	protected $dependencies;
+	/** @var int */
+	protected $version = 0;
 
+	/** @var int */
+	protected $compat = 0;
+
+	/** @var array */
+	protected $dictionary = array();
+
+	/** @var int[] */
+	protected $dependencies = array();
+
+	/** @var bool */
 	private $skipDependBlock;
-	private $entries;
+
+	/** @var array<int, mixed> */
+	private $entries = array();
 
 	/** @var string key from $typeVersion */
 	private $fileName;
@@ -47,6 +57,7 @@ class PackedSheets implements PackedSheetsCollection, StreamInterface {
 	/** @var int */
 	private $fileVersion;
 
+	/** @var array<string,int> */
 	private $typeVersion = array(
 		'creature' => 17,
 		//disabled:'player' => 0,
@@ -86,6 +97,10 @@ class PackedSheets implements PackedSheetsCollection, StreamInterface {
 		'faction' => 0,
 	);
 
+	/**
+	 * @param string $type
+	 * @param bool $skipDependBlock
+	 */
 	public function __construct($type, $skipDependBlock = true) {
 		if (!isset($this->typeVersion[$type])) {
 			throw new \RuntimeException("Unsupported packed sheet file type ($type)");
@@ -95,10 +110,13 @@ class PackedSheets implements PackedSheetsCollection, StreamInterface {
 		$this->fileVersion = $this->typeVersion[$type];
 
 		$this->skipDependBlock = $skipDependBlock;
-
-		$this->entries = array();
 	}
 
+	/**
+	 * @param MemStream $s
+	 *
+	 * @return void
+	 */
 	protected function readHeader(MemStream $s) {
 		// check header
 		$s->serial_buffer($hskp, 4);
@@ -119,7 +137,7 @@ class PackedSheets implements PackedSheetsCollection, StreamInterface {
 		} else {
 			// read dictionary
 			$s->serial_uint32($nb);
-			$s->serial_int_string($this->dictionnary, $nb);
+			$s->serial_int_string($this->dictionary, $nb);
 
 			// read dependency data
 			$this->dependencies = array();
@@ -132,6 +150,11 @@ class PackedSheets implements PackedSheetsCollection, StreamInterface {
 		}
 	}
 
+	/**
+	 * @param MemStream $s
+	 *
+	 * @return void
+	 */
 	public function serial(MemStream $s) {
 		$this->readHeader($s);
 
@@ -151,11 +174,11 @@ class PackedSheets implements PackedSheetsCollection, StreamInterface {
 			$s->serial_uint32($entityType);
 
 			$entity = EntityType::factory($entityType);
-			$s->serial_uint32($entity->Id);
+			$s->serial_uint32($entityId);
 
-			// if $sheetId and entity->Id dont match, then we have file format error
-			if ($sheetId != $entity->Id) {
-				throw new \RuntimeException("Failed loading {$this->fileName} packed sheets file. sheetId and entityId are different");
+			// if $sheetId and entityId dont match, then we have file format error
+			if ($sheetId !== $entityId) {
+				throw new \RuntimeException("Failed loading {$this->fileName} packed sheets file. sheetId({$sheetId}) and entityId({$entityId}) are different");
 			}
 
 			// read rest of buffer
@@ -174,13 +197,15 @@ class PackedSheets implements PackedSheetsCollection, StreamInterface {
 	}
 
 	/**
-	 * @param $id
+	 * @param int $id
 	 *
-	 * @return mixed
+	 * @return mixed|null
 	 */
 	public function get($id) {
 		if (isset($this->entries[$id])) {
 			return $this->entries[$id];
 		}
+
+		return null;
 	}
 }

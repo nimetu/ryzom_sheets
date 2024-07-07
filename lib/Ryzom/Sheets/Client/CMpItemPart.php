@@ -27,14 +27,13 @@ use Nel\Misc\StreamInterface;
 
 class CMpItemPart implements StreamInterface {
 	/** @var int */
-	public $OriginFilter;
+	public $OriginFilter = 0;
 
 	/** @var int */
-	public $Stats;
+	public $Stats = 0;
 
 	public function serial(MemStream $s) {
 		$s->serial_byte($this->OriginFilter);
 		$s->serial_byte($this->Stats, 34);
 	}
-
 }

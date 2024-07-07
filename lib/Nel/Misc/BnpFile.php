@@ -23,22 +23,17 @@
 namespace Nel\Misc;
 
 use RuntimeException;
-use ArrayAccess;
 use Iterator;
 
 /**
  * Allows access to files inside .bnp container
+ *
+ * @template-implements \Iterator<string,string>
  */
 class BnpFile implements Iterator {
 
-	private $filename;
-
-	/**
-	 * Is header loaded yet?
-	 *
-	 * @var bool
-	 */
-	private $started;
+	/** @var string */
+	private $bnpFileName;
 
 	/**
 	 * Associated list of files in this bnp
@@ -47,87 +42,72 @@ class BnpFile implements Iterator {
 	 *
 	 * @var array
 	 */
-	private $header;
+	private $header = array();
 
 	/**
 	 * List of files in this bnp
 	 *
 	 * @var array
 	 */
-	private $headerFiles;
-
-	/**
-	 * Count of files in this bnp
-	 *
-	 * @var int
-	 */
-	private $headerCount;
+	private $headerFiles = array();
 
 	/**
 	 * Counter for iterator position
 	 *
 	 * @var int
 	 */
-	private $headerPosition;
+	private $headerPosition = 0;
 
 	/**
 	 * fopen file handle
 	 *
-	 * @var resource
+	 * @var resource|null
 	 */
 	private $bnp;
 
-	/** @var string */
-	private $fileName;
+	/** @var string|null */
+	private $fileName = null;
 
 	/** @var int */
-	private $fileStart;
+	private $fileStart = 0;
 
 	/** @var int */
-	private $fileSize;
+	private $fileSize = 0;
 
 	/** @var int */
-	private $filePos;
+	private $filePos = 0;
 
 	/**
 	 * Prepares new bnp file for reading
 	 *
-	 * @param string $filename full path and filename
+	 * @param string $bnpFileName
 	 *
-	 * @throws RuntimeException if file not found
+	 * @throws \RuntimeException if file not found
 	 */
-	function __construct($filename) {
-		if (!file_exists($filename)) {
-			throw new RuntimeException("File [$filename] not found.");
+	function __construct($bnpFileName) {
+		if (!file_exists($bnpFileName)) {
+			throw new RuntimeException("File [$bnpFileName] not found.");
 		}
 
-		$this->filename = $filename;
-
-		$this->started = false;
-		$this->header = false;
-		$this->headerCount = 0;
-		$this->headerFiles = array();
-
-		$this->fileName = null;
-		$this->fileStart = null;
-		$this->fileSize = null;
-		$this->filePos = null;
+		$this->bnpFileName = $bnpFileName;
 	}
 
 	function __destruct() {
-		if ($this->started) {
+		if ($this->bnp) {
 			fclose($this->bnp);
 		}
 	}
 
 	/**
 	 * Read header from bnp file
+	 *
+	 * @return void
 	 */
 	private function initialize() {
-		if ($this->header !== false) {
+		if ($this->bnp) {
 			return;
 		}
-		$this->bnp = fopen($this->filename, 'r');
+		$this->bnp = fopen($this->bnpFileName, 'r');
 
 		$stats = fstat($this->bnp);
 		$size = $stats['size'];
@@ -157,7 +137,7 @@ class BnpFile implements Iterator {
 				'start' => $start,
 			);
 		}
-		$this->headerCount = count($this->header);
+
 		$this->headerFiles = array_keys($this->header);
 		$this->headerPosition = 0;
 	}
@@ -169,7 +149,7 @@ class BnpFile implements Iterator {
 	 */
 	#[\ReturnTypeWillChange]
 	public function current() {
-		if (!$this->started) {
+		if (!$this->bnp) {
 			$this->initialize();
 		}
 		$file = $this->headerFiles[$this->headerPosition];
@@ -183,7 +163,7 @@ class BnpFile implements Iterator {
 	 */
 	#[\ReturnTypeWillChange]
 	public function key() {
-		if (!$this->started) {
+		if (!$this->bnp) {
 			$this->initialize();
 		}
 		if ($this->valid()) {
@@ -194,10 +174,10 @@ class BnpFile implements Iterator {
 
 	/**
 	 * Iterator: move forward to next element
-	*/
+	 */
 	#[\ReturnTypeWillChange]
 	public function next() {
-		if (!$this->started) {
+		if (!$this->bnp) {
 			$this->initialize();
 		}
 		$this->headerPosition++;
@@ -208,7 +188,7 @@ class BnpFile implements Iterator {
 	 */
 	#[\ReturnTypeWillChange]
 	public function rewind() {
-		if (!$this->started) {
+		if (!$this->bnp) {
 			$this->initialize();
 		}
 		$this->headerPosition = 0;
@@ -221,7 +201,7 @@ class BnpFile implements Iterator {
 	 */
 	#[\ReturnTypeWillChange]
 	public function valid() {
-		if (!$this->started) {
+		if (!$this->bnp) {
 			$this->initialize();
 		}
 		return isset($this->headerFiles[$this->headerPosition]);
@@ -234,8 +214,8 @@ class BnpFile implements Iterator {
 	 *
 	 * @return bool
 	 */
-	function hasFile($filename) {
-		if (!$this->started) {
+	public function hasFile($filename) {
+		if (!$this->bnp) {
 			$this->initialize();
 		}
 		return isset($this->header[$filename]);
@@ -246,8 +226,8 @@ class BnpFile implements Iterator {
 	 *
 	 * @return string[]
 	 */
-	function getFileNames() {
-		if (!$this->started) {
+	public function getFileNames() {
+		if (!$this->bnp) {
 			$this->initialize();
 		}
 		return array_keys($this->header);
@@ -258,10 +238,10 @@ class BnpFile implements Iterator {
 	 *
 	 * @param string $filename
 	 *
-	 * @return int
+	 * @return int|false
 	 */
-	function getFileStat($filename) {
-		if (!$this->started) {
+	public function getFileStat($filename) {
+		if (!$this->bnp) {
 			$this->initialize();
 		}
 		return $this->hasFile($filename) ? $this->header[$filename] : false;
@@ -272,10 +252,10 @@ class BnpFile implements Iterator {
 	 *
 	 * @param string $filename
 	 *
-	 * @return int
+	 * @return int|false
 	 */
-	function getFileSize($filename) {
-		if (!$this->started) {
+	public function getFileSize($filename) {
+		if (!$this->bnp) {
 			$this->initialize();
 		}
 		return $this->hasFile($filename) ? $this->header[$filename]['size'] : false;
@@ -284,12 +264,12 @@ class BnpFile implements Iterator {
 	/**
 	 * Return position in .bnp file where file starts
 	 *
-	 * @param $filename
+	 * @param string $filename
 	 *
-	 * @return int
+	 * @return int|false
 	 */
-	function getFileStart($filename) {
-		if (!$this->started) {
+	public function getFileStart($filename) {
+		if (!$this->bnp) {
 			$this->initialize();
 		}
 		return $this->hasFile($filename) ? $this->header[$filename]['start'] : false;
@@ -298,17 +278,18 @@ class BnpFile implements Iterator {
 	/**
 	 * Selects filename from bnp and seeks to file start
 	 *
-	 * @param $filename
+	 * @param string $filename
 	 *
 	 * @return bool
 	 */
-	function select($filename) {
+	public function select($filename) {
 		if ($this->hasFile($filename)) {
 			$this->fileName = $filename;
-			$this->fileStart = $this->getFileStart($filename);
-			$this->fileSize = $this->getFileSize($filename);
+			$this->fileStart = $this->header[$filename]['start'];
+			$this->fileSize = $this->header[$filename]['size'];
 			$this->filePos = $this->fileStart;
 
+			/** @psalm-suppress PossiblyNullArgument */
 			fseek($this->bnp, $this->fileStart);
 			return true;
 		} else {
@@ -324,7 +305,7 @@ class BnpFile implements Iterator {
 	 *
 	 * @return bool
 	 */
-	function seek($pos) {
+	public function seek($pos) {
 		if ($pos < 0 || $pos > $this->fileSize) {
 			return false;
 		}
@@ -340,15 +321,16 @@ class BnpFile implements Iterator {
 	 * @return string
 	 * @throws \RuntimeException
 	 */
-	function read($bytes = null) {
+	public function read($bytes = null) {
 		if ($this->fileName === null) {
 			throw new RuntimeException('No file is selected. Need to use select() method first');
 		}
 		$bytesLeft = $this->fileSize - ($this->filePos - $this->fileStart);
-		if ($bytes === null | $bytes < 0 || $bytes > $bytesLeft) {
+		if ($bytes === null || $bytes <= 0 || $bytes > $bytesLeft) {
 			$bytes = $bytesLeft;
 		}
 
+		/** @psalm-suppress PossiblyNullArgument */
 		$result = fread($this->bnp, $bytes);
 		if ($result !== false) {
 			$this->filePos += strlen($result);
@@ -363,7 +345,7 @@ class BnpFile implements Iterator {
 	 *
 	 * @return mixed content of requested file or NULL when file was not found
 	 */
-	function readFile($file) {
+	public function readFile($file) {
 		if ($this->select($file)) {
 			return $this->read();
 		}
