@@ -128,4 +128,46 @@ class BitStructTest extends \PHPUnit\Framework\TestCase
 		$this->assertEquals(0x1234, $bit->hi);
 		$this->assertEquals(0x5678, $bit->lo);
 	}
+
+	public function testSetValueHexOddLength() {
+		$bit = new BitStruct(array(
+			'lo' => 16,
+			'hi' => 16,
+		));
+		$this->assertEquals(0, $bit->getValue());
+
+		$hex = '1234567';
+		$bit->setValue('0x'.$hex);
+		$this->assertEquals('19088743', $bit->getValue());
+		$this->assertEquals('0'.$hex, $bit->getValueHex());
+		$this->assertEquals(0x0123, $bit->hi);
+		$this->assertEquals(0x4567, $bit->lo);
+	}
+
+
+	public function testSetValueHexSingle() {
+		$bit = new BitStruct(array(
+            'lo' => 16,
+            'hi' => 16,
+		));
+
+		$this->assertEquals(0, $bit->getValue());
+
+		$hex = '7';
+		$bit->setValue('0x'.$hex);
+		$this->assertEquals('7', $bit->getValue());
+		$this->assertEquals('0'.$hex, $bit->getValueHex());
+		$this->assertEquals(0x00, $bit->hi);
+		$this->assertEquals(0x07, $bit->lo);
+	}
+
+
+    public function testGetValueHex() {
+        $bit = new BitStruct(array(
+            'value' => 7,
+        ));
+        $bit->setValue(7);
+        $this->assertEquals('7', $bit->getValue());
+        $this->assertEquals('07', $bit->getValueHex());
+    }
 }

@@ -1,8 +1,6 @@
 <?php
 namespace Ryzom\Translation\Loader;
 
-/**
- */
 class UxtLoaderTest extends \PHPUnit\Framework\TestCase {
 
 	public function testLoadingSingle() {
@@ -124,4 +122,3 @@ class UxtLoaderTest extends \PHPUnit\Framework\TestCase {
 		$this->assertEquals($expect, $data);
 	}
 }
-

@@ -1,8 +1,6 @@
 <?php
 namespace Ryzom\Translation\Loader;
 
-/**
- */
 class WordsLoaderTest extends \PHPUnit\Framework\TestCase {
 
 	public function testSkipColumn() {
@@ -62,4 +60,3 @@ class WordsLoaderTest extends \PHPUnit\Framework\TestCase {
 		$this->assertEquals($expect, $data);
 	}
 }
-

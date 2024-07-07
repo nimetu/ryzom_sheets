@@ -22,9 +22,8 @@
 
 namespace Nel\Misc;
 
-/**
- * MemStreamTest
- */
+use ReflectionClass;
+
 class MemStreamTest extends \PHPUnit\Framework\TestCase {
 
 	public function testBuffer() {
@@ -76,24 +75,26 @@ class MemStreamTest extends \PHPUnit\Framework\TestCase {
 	}
 
 	public function test_format_size() {
+		$class = new ReflectionClass('\Nel\Misc\MemStream');
+		$func = $class->getMethod('_format_size');
 		$mem = new MemStream();
-		$this->assertEquals(1, $mem->_format_size('a1'));
-		$this->assertEquals(20, $mem->_format_size('a20'));
-		$this->assertEquals(1, $mem->_format_size('c'));
-		$this->assertEquals(1, $mem->_format_size('C'));
-		$this->assertEquals(2, $mem->_format_size('s'));
-		$this->assertEquals(2, $mem->_format_size('S'));
-		$this->assertEquals(2, $mem->_format_size('n'));
-		$this->assertEquals(2, $mem->_format_size('v'));
-		$this->assertEquals(4, $mem->_format_size('l'));
-		$this->assertEquals(4, $mem->_format_size('L'));
-		$this->assertEquals(4, $mem->_format_size('N'));
-		$this->assertEquals(4, $mem->_format_size('V'));
-		$this->assertEquals(8, $mem->_format_size('d'));
-		$this->assertEquals(1, $mem->_format_size('x'));
+		$this->assertEquals(1, $func->invokeArgs($mem, array('a1')));
+		$this->assertEquals(20, $func->invokeArgs($mem, array('a20')));
+		$this->assertEquals(1, $func->invokeArgs($mem, array('c')));
+		$this->assertEquals(1, $func->invokeArgs($mem, array('C')));
+		$this->assertEquals(2, $func->invokeArgs($mem, array('s')));
+		$this->assertEquals(2, $func->invokeArgs($mem, array('S')));
+		$this->assertEquals(2, $func->invokeArgs($mem, array('n')));
+		$this->assertEquals(2, $func->invokeArgs($mem, array('v')));
+		$this->assertEquals(4, $func->invokeArgs($mem, array('l')));
+		$this->assertEquals(4, $func->invokeArgs($mem, array('L')));
+		$this->assertEquals(4, $func->invokeArgs($mem, array('N')));
+		$this->assertEquals(4, $func->invokeArgs($mem, array('V')));
+		$this->assertEquals(8, $func->invokeArgs($mem, array('d')));
+		$this->assertEquals(1, $func->invokeArgs($mem, array('x')));
+
 		$this->expectException('\RuntimeException', 'Unknown format {?}');
-		$mem->_format_size('?');
-		//throw new \Exception('Unknown format {'.$format.'}');
+		$func->invokeArgs($mem, array('?'));
 	}
 
 	public function testBufferOverflow() {
